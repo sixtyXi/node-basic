@@ -1,4 +1,8 @@
 {
+  "env": {
+    "node": true,
+    "es6": true
+  },
   "parser": "@typescript-eslint/parser",
   "extends": [
     "airbnb-base",
@@ -11,5 +15,9 @@
     "sourceType": "module",
     "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
+  },
+  "rules": {
+    "no-console": "off",
+    "newline-after-var": ["error", "always"]
   }
 }
