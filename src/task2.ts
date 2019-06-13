@@ -1,8 +1,14 @@
 import csv from 'csvtojson';
 import fs from 'fs';
 
+const dir = './dist';
+
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir);
+}
+
 const csvFilePath = './scv/input_example.csv';
-const outputPath = './dist/output_example.txt';
+const outputPath = `${dir}/output_example.txt`;
 
 const readStream = fs.createReadStream(csvFilePath);
 const writeStream = fs.createWriteStream(outputPath);
