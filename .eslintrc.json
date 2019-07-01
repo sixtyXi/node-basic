@@ -3,6 +3,13 @@
     "node": true,
     "es6": true
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
   "parser": "@typescript-eslint/parser",
   "extends": [
     "airbnb-base",
