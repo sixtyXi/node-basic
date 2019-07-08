@@ -2,13 +2,13 @@
   "name": "node-basic",
   "version": "1.0.0",
   "description": "Mentoring program",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint --cache */**/*.{js,ts}  --ignore-path .gitignore --fix",
-    "task1": "nodemon src/task1.ts",
-    "task2": "nodemon src/task2.ts",
-    "task2:debug": "nodemon --inspect-brk src/task2.ts"
+    "prod": "node dist/app.js",
+    "dev": "nodemon src/app.ts",
+    "dev:debug": "nodemon --inspect-brk src/app.ts",
+    "lint": "eslint --cache */**/*.{js,ts}  --ignore-path .gitignore --fix"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/sixtyXi/node-basic#readme",
   "devDependencies": {
+    "@types/express": "^4.17.0",
     "@types/node": "^12.0.8",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
@@ -35,6 +36,7 @@
     "typescript": "^3.5.1"
   },
   "dependencies": {
-    "csvtojson": "^2.0.8"
+    "csvtojson": "^2.0.8",
+    "express": "^4.17.1"
   }
 }
