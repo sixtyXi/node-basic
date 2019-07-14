@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 export default class User {
-  readonly id: string = uuid();
+  public readonly id: string = uuid();
 
   public login: string;
 

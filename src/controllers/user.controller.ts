@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 
 import userService from '../services/user.service';
 
-const getUsers = (req: Request, res: Response) => {
+const getUsers = (req: Request, res: Response): void => {
   const users = userService.getUsers();
 
   res.json(users);
 };
 
-const getUserById = (req: Request, res: Response) => {
+const getUserById = (req: Request, res: Response): void => {
   const user = userService.getUserById(req.params.userId);
 
   if (user) {
@@ -18,14 +18,14 @@ const getUserById = (req: Request, res: Response) => {
   }
 };
 
-const addUser = (req: Request, res: Response) => {
+const addUser = (req: Request, res: Response): void => {
   const { login, password, age } = req.body;
   const newUser = userService.addUser({ login, password, age });
 
   res.json(newUser);
 };
 
-const updateUser = (req: Request, res: Response) => {
+const updateUser = (req: Request, res: Response): void => {
   const { login, password, age } = req.body;
   const updatedUser = userService.updateUser(req.params.userId, { login, password, age });
 
@@ -36,7 +36,7 @@ const updateUser = (req: Request, res: Response) => {
   }
 };
 
-const deleteUser = (req: Request, res: Response) => {
+const deleteUser = (req: Request, res: Response): void => {
   const deletedUser = userService.deleteUserById(req.params.userId);
 
   if (deletedUser) {
