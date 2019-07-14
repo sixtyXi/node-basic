@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
 export default class User {
-  public id: string = uuid();
+  readonly id: string = uuid();
 
   public login: string;
 
@@ -11,9 +11,15 @@ export default class User {
 
   public isDeleted: boolean = false;
 
-  public constructor(login: string, password: string, age: number) {
-    this.login = login;
-    this.password = password;
-    this.age = age;
+  public constructor(userInfo: UserInfo) {
+    this.login = userInfo.login;
+    this.password = userInfo.password;
+    this.age = userInfo.age;
   }
+}
+
+export interface UserInfo {
+  login: string;
+  password: string;
+  age: number;
 }

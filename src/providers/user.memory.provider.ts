@@ -1,26 +1,28 @@
-import User from '../models/user.model';
+import User, { UserInfo } from '../models/user.model';
 import USERS from '../mocks/users';
 
 let users = USERS;
 
 const getUsers = (): User[] => users.filter((user): boolean => !user.isDeleted);
 
-const getUserById = (id: string): User | undefined => users.find((user): boolean => user.id === id);
+const getUserById = (id: string): User | undefined =>
+  users.find((user): boolean => user.id === id && !user.isDeleted);
 
 const addUser = (user: User): User => {
   users.push(user);
   return user;
 };
 
-const updateUser = (userToUpdate: User): User | undefined => {
+const updateUser = (userId: string, userInfo: UserInfo): User | undefined => {
   let updatedUser;
 
   users = users.map(
     (user): User => {
-      if (user.id === userToUpdate.id) {
-        updatedUser = { ...user, ...userToUpdate };
-        return updatedUser;
+      if (user.id === userId) {
+        user = { ...user, ...userInfo };
+        updatedUser = user;
       }
+
       return user;
     }
   );

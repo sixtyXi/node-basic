@@ -1,17 +1,18 @@
-import User from '../models/user.model';
+import User, { UserInfo } from '../models/user.model';
 import userResource from '../providers/user.memory.provider';
 
 const getUsers = (): User[] => userResource.getUsers();
 
 const getUserById = (id: string): User | undefined => userResource.getUserById(id);
 
-const addUser = (login: string, password: string, age: number): User => {
-  const user = new User(login, password, age);
+const addUser = (userInfo: UserInfo): User => {
+  const user = new User(userInfo);
 
   return userResource.addUser(user);
 };
 
-const updateUser = (user: User): User | undefined => userResource.updateUser(user);
+const updateUser = (userId: string, userInfo: UserInfo): User | undefined =>
+  userResource.updateUser(userId, userInfo);
 
 const deleteUserById = (id: string): User | undefined => userResource.deleteUserById(id);
 
