@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-export default class User {
+export default class User implements UserInfo, Entry {
   public readonly id: string = uuid();
 
   public login: string;
@@ -22,4 +22,9 @@ export interface UserInfo {
   login: string;
   password: string;
   age: number;
+}
+
+export interface Entry {
+  readonly id: string;
+  isDeleted: boolean;
 }
