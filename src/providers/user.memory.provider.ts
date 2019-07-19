@@ -3,17 +3,28 @@ import USERS from '../mocks/users';
 
 let users = USERS;
 
-const getUsers = (): User[] => users.filter((user): boolean => !user.isDeleted);
+async function getUsers(): Promise<User[]> {
+  const noDeletedUsers = users.filter((user): boolean => !user.isDeleted);
 
-const getUserById = (id: string): User | undefined =>
-  users.find((user): boolean => user.id === id && !user.isDeleted);
+  return noDeletedUsers;
+}
 
-const addUser = (user: User): User => {
+async function getUserById(id: string): Promise<User> {
+  const foundUser = users.find((user): boolean => user.id === id && !user.isDeleted);
+
+  if (foundUser) {
+    return foundUser;
+  }
+
+  throw new Error();
+}
+
+async function addUser(user: User): Promise<User> {
   users.push(user);
   return user;
-};
+}
 
-const updateUser = (userId: string, userInfo: UserInfo): User | undefined => {
+async function updateUser(userId: string, userInfo: UserInfo): Promise<User> {
   let updatedUser;
 
   users = users.map(
@@ -27,17 +38,22 @@ const updateUser = (userId: string, userInfo: UserInfo): User | undefined => {
     }
   );
 
-  return updatedUser;
-};
-
-const deleteUserById = (id: string): User | undefined => {
-  const deletedUser = getUserById(id);
-
-  if (deletedUser) {
-    deletedUser.isDeleted = true;
+  if (updatedUser) {
+    return updatedUser;
   }
 
-  return deletedUser;
-};
+  throw new Error();
+}
+
+async function deleteUserById(id: string): Promise<User> {
+  const userToDelete = await getUserById(id);
+
+  if (userToDelete) {
+    userToDelete.isDeleted = true;
+    return userToDelete;
+  }
+
+  throw new Error();
+}
 
 export default { getUsers, getUserById, addUser, updateUser, deleteUserById };

@@ -3,47 +3,51 @@ import { Request, Response } from 'express';
 import userService from '../services/user.service';
 
 const getUsers = (req: Request, res: Response): void => {
-  const users = userService.getUsers();
-
-  res.json(users);
+  userService
+    .getUsers()
+    .then((users): void => {
+      res.json(users);
+    })
+    .catch((): void => res.status(404).end());
 };
 
 const getUserById = (req: Request, res: Response): void => {
-  const user = userService.getUserById(req.params.userId);
-
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(404).end();
-  }
+  userService
+    .getUserById(req.params.userId)
+    .then((user): void => {
+      res.json(user);
+    })
+    .catch((): void => res.status(404).end());
 };
 
 const addUser = (req: Request, res: Response): void => {
   const { login, password, age } = req.body;
-  const newUser = userService.addUser({ login, password, age });
 
-  res.json(newUser);
+  userService
+    .addUser({ login, password, age })
+    .then((user): void => {
+      res.json(user);
+    })
+    .catch((): void => res.status(400).end());
 };
 
 const updateUser = (req: Request, res: Response): void => {
   const { login, password, age } = req.body;
-  const updatedUser = userService.updateUser(req.params.userId, { login, password, age });
-
-  if (updatedUser) {
-    res.json(updatedUser);
-  } else {
-    res.status(400).end();
-  }
+  userService
+    .updateUser(req.params.userId, { login, password, age })
+    .then((user): void => {
+      res.json(user);
+    })
+    .catch((): void => res.status(400).end());
 };
 
 const deleteUser = (req: Request, res: Response): void => {
-  const deletedUser = userService.deleteUserById(req.params.userId);
-
-  if (deletedUser) {
-    res.json(deletedUser);
-  } else {
-    res.status(400).end();
-  }
+  userService
+    .deleteUserById(req.params.userId)
+    .then((user): void => {
+      res.json(user);
+    })
+    .catch((): void => res.status(400).end());
 };
 
 export default { getUsers, getUserById, addUser, updateUser, deleteUser };
