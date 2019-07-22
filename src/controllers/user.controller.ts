@@ -2,52 +2,56 @@ import { Request, Response } from 'express';
 
 import userService from '../services/user.service';
 
-const getUsers = (req: Request, res: Response): void => {
-  userService
-    .getUsers()
-    .then((users): void => {
-      res.json(users);
-    })
-    .catch((): void => res.status(404).end());
-};
+async function getUsers(req: Request, res: Response): Promise<void> {
+  try {
+    const users = await userService.getUsers();
 
-const getUserById = (req: Request, res: Response): void => {
-  userService
-    .getUserById(req.params.userId)
-    .then((user): void => {
-      res.json(user);
-    })
-    .catch((): void => res.status(404).end());
-};
+    res.json(users);
+  } catch (error) {
+    res.status(404).end();
+  }
+}
 
-const addUser = (req: Request, res: Response): void => {
-  const { login, password, age } = req.body;
+async function getUserById(req: Request, res: Response): Promise<void> {
+  try {
+    const user = await userService.getUserById(req.params.userId);
 
-  userService
-    .addUser({ login, password, age })
-    .then((user): void => {
-      res.json(user);
-    })
-    .catch((): void => res.status(400).end());
-};
+    res.json(user);
+  } catch (error) {
+    res.status(404).end();
+  }
+}
 
-const updateUser = (req: Request, res: Response): void => {
-  const { login, password, age } = req.body;
-  userService
-    .updateUser(req.params.userId, { login, password, age })
-    .then((user): void => {
-      res.json(user);
-    })
-    .catch((): void => res.status(400).end());
-};
+async function addUser(req: Request, res: Response): Promise<void> {
+  try {
+    const { login, password, age } = req.body;
+    const addedUser = await userService.addUser({ login, password, age });
 
-const deleteUser = (req: Request, res: Response): void => {
-  userService
-    .deleteUserById(req.params.userId)
-    .then((user): void => {
-      res.json(user);
-    })
-    .catch((): void => res.status(400).end());
-};
+    res.json(addedUser);
+  } catch (error) {
+    res.status(400).end();
+  }
+}
+
+async function updateUser(req: Request, res: Response): Promise<void> {
+  try {
+    const { login, password, age } = req.body;
+    const updatedUser = await userService.updateUser(req.params.userId, { login, password, age });
+
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).end();
+  }
+}
+
+async function deleteUser(req: Request, res: Response): Promise<void> {
+  try {
+    const deletedUser = await userService.deleteUserById(req.params.userId);
+
+    res.json(deletedUser);
+  } catch (error) {
+    res.status(400).end();
+  }
+}
 
 export default { getUsers, getUserById, addUser, updateUser, deleteUser };
