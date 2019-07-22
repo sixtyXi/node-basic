@@ -3,8 +3,7 @@ import { Sequelize, Model, DataTypes, Op } from 'sequelize';
 import User, { UserInfo, Entry } from '../models/user.model';
 import USERS from '../mocks/users';
 
-const CONNECTION_STR = 'postgres://test1:test1@localhost:5432/db-test';
-const sequelize = new Sequelize(CONNECTION_STR);
+const sequelize = new Sequelize(`${process.env.POSTGRE_URI}`);
 const { ne } = Op;
 
 class UserTable extends Model implements UserInfo, Entry {
@@ -68,7 +67,7 @@ async function getUsers(): Promise<User[]> {
 async function getUserById(id: string): Promise<User> {
   const user = await UserTable.findByPk(id);
 
-  if (!user.isDeleted) {
+  if (user && !user.isDeleted) {
     return user;
   }
 
@@ -88,14 +87,28 @@ async function updateUser(id: string, userInfo: UserInfo): Promise<User> {
   });
 
   if (result[1]) {
-    return result[1].dataValues;
+    return result[1][0];
   }
 
   throw new Error();
 }
 
 async function deleteUserById(id: string): Promise<User> {
-  return UserTable.destroy({ where: { id } });
+  const result = await UserTable.update(
+    { isDeleted: true },
+    {
+      where: {
+        id
+      },
+      returning: true
+    }
+  );
+
+  if (result[1]) {
+    return result[1][0];
+  }
+
+  throw new Error();
 }
 
 export default { getUsers, getUserById, addUser, updateUser, deleteUserById };

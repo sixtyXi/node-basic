@@ -2,7 +2,10 @@
 
 ## Usage
 
-- Task 1 `npm run task1`
-- Task 2 `npm run task2`
+- Run docker `npm run up`
+- Stop docker `npm run down`
 - Build `npm run build`
+- Prod `npm run prod`
+- Dev `npm run dev`
+- Debug `npm run dev:debug`
 - ESLint `npm run lint`
