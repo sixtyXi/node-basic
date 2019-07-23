@@ -1,5 +1,8 @@
 import User, { UserInfo } from '../models/user.model';
-import userResource from '../providers/user.db.provider';
+import UserResourceContract from '../interfaces/UserResourceContract';
+import UserResource from '../resources/user.db.resource';
+
+const userResource: UserResourceContract = new UserResource();
 
 const getUsers = (): Promise<User[]> => userResource.getUsers();
 
