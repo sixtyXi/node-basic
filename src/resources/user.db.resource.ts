@@ -1,4 +1,5 @@
 import { Sequelize, Op } from 'sequelize';
+import { injectable } from 'inversify';
 
 import User, { UserInfo } from '../models/user.model';
 import UserResourceContract from '../interfaces/UserResourceContract';
@@ -7,6 +8,7 @@ import USERS from '../mocks/users';
 
 const { ne } = Op;
 
+@injectable()
 class UserDataBaseResource implements UserResourceContract {
   private sequelize = new Sequelize(`${process.env.POSTGRE_URI}`);
 

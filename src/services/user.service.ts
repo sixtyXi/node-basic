@@ -1,10 +1,13 @@
+import { injectable, inject } from 'inversify';
+
 import User, { UserInfo } from '../models/user.model';
 import UserResourceContract from '../interfaces/UserResourceContract';
 
+@injectable()
 class UserService {
   private userResource: UserResourceContract;
 
-  public constructor(userResource: UserResourceContract) {
+  public constructor(@inject('UserResourceContract') userResource: UserResourceContract) {
     this.userResource = userResource;
   }
 

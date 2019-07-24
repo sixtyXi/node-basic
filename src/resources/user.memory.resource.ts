@@ -1,7 +1,10 @@
+import { injectable } from 'inversify';
+
 import User, { UserInfo } from '../models/user.model';
 import UserResourceContract from '../interfaces/UserResourceContract';
 import USERS from '../mocks/users';
 
+@injectable()
 class UserMemoryResource implements UserResourceContract {
   private users = USERS;
 

@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
+import { injectable, inject } from 'inversify';
 
 import UserService from '../services/user.service';
 
+@injectable()
 class UserController {
   private userService: UserService;
 
-  public constructor(userService: UserService) {
+  public constructor(@inject(UserService) userService: UserService) {
     this.userService = userService;
   }
 
