@@ -2,13 +2,17 @@
   "name": "node-basic",
   "version": "1.0.0",
   "description": "Mentoring program",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
+    "prod": "node -r dotenv/config dist/app.js",
+    "serve": "run-s build up prod",
+    "start": "run-s \"up\" \"dev\"",
+    "dev": "nodemon -r dotenv/config src/app.ts",
+    "dev:debug": "nodemon -r dotenv/config --inspect-brk src/app.ts",
     "lint": "eslint --cache */**/*.{js,ts}  --ignore-path .gitignore --fix",
-    "task1": "nodemon src/task1.ts",
-    "task2": "nodemon src/task2.ts",
-    "task2:debug": "nodemon --inspect-brk src/task2.ts"
+    "up": "docker-compose up",
+    "down": "docker-compose down"
   },
   "repository": {
     "type": "git",
@@ -21,7 +25,12 @@
   },
   "homepage": "https://github.com/sixtyXi/node-basic#readme",
   "devDependencies": {
+    "@types/bluebird": "^3.5.27",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^4.17.0",
     "@types/node": "^12.0.8",
+    "@types/uuid": "^3.4.5",
+    "@types/validator": "^10.11.1",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "eslint": "^5.3.0",
@@ -35,6 +44,14 @@
     "typescript": "^3.5.1"
   },
   "dependencies": {
-    "csvtojson": "^2.0.8"
+    "csvtojson": "^2.0.8",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "inversify": "^5.0.1",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.10.1",
+    "uuid": "^3.3.2"
   }
 }
