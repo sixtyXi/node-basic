@@ -1,19 +1,31 @@
 import { Router } from 'express';
 
-import userController from '../controllers/user.controller';
+import UserController from '../controllers/user.controller';
 
-const BASE_URL = '/users';
-const router = Router();
+class UserRoute {
+  private BASE_URL = '/users';
 
-router
-  .route(BASE_URL)
-  .get(userController.getUsers)
-  .post(userController.addUser);
+  private userController: UserController;
 
-router
-  .route(`${BASE_URL}/:userId`)
-  .get(userController.getUserById)
-  .put(userController.updateUser)
-  .delete(userController.deleteUser);
+  public router = Router();
 
-export default router;
+  public constructor(userController: UserController) {
+    this.userController = userController;
+    this.init();
+  }
+
+  private init(): void {
+    this.router
+      .route(this.BASE_URL)
+      .get(this.userController.getUsers)
+      .post(this.userController.addUser);
+
+    this.router
+      .route(`${this.BASE_URL}/:userId`)
+      .get(this.userController.getUserById)
+      .put(this.userController.updateUser)
+      .delete(this.userController.deleteUser);
+  }
+}
+
+export default UserRoute;

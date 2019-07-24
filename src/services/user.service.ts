@@ -1,22 +1,34 @@
 import User, { UserInfo } from '../models/user.model';
 import UserResourceContract from '../interfaces/UserResourceContract';
-import UserResource from '../resources/user.db.resource';
 
-const userResource: UserResourceContract = new UserResource();
+class UserService {
+  private userResource: UserResourceContract;
 
-const getUsers = (): Promise<User[]> => userResource.getUsers();
+  public constructor(userResource: UserResourceContract) {
+    this.userResource = userResource;
+  }
 
-const getUserById = (id: string): Promise<User> => userResource.getUserById(id);
+  public getUsers(): Promise<User[]> {
+    return this.userResource.getUsers();
+  }
 
-const addUser = (userInfo: UserInfo): Promise<User> => {
-  const user = new User(userInfo);
+  public getUserById(id: string): Promise<User> {
+    return this.userResource.getUserById(id);
+  }
 
-  return userResource.addUser(user);
-};
+  public addUser(userInfo: UserInfo): Promise<User> {
+    const user = new User(userInfo);
 
-const updateUser = (userId: string, userInfo: UserInfo): Promise<User> =>
-  userResource.updateUser(userId, userInfo);
+    return this.userResource.addUser(user);
+  }
 
-const deleteUserById = (id: string): Promise<User> => userResource.deleteUserById(id);
+  public updateUser(userId: string, userInfo: UserInfo): Promise<User> {
+    return this.userResource.updateUser(userId, userInfo);
+  }
 
-export default { getUsers, getUserById, addUser, updateUser, deleteUserById };
+  public deleteUserById(id: string): Promise<User> {
+    return this.userResource.deleteUserById(id);
+  }
+}
+
+export default UserService;
