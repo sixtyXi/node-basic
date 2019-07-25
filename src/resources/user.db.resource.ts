@@ -68,19 +68,11 @@ class UserDataBaseResource implements UserResourceContract {
     throw new Error();
   }
 
-  public async deleteUserById(id: string): Promise<User> {
-    const result = await this.UserTable.update(
-      { isDeleted: true },
-      {
-        where: {
-          id
-        },
-        returning: true
-      }
-    );
+  public async deleteUserById(id: string): Promise<void> {
+    const [result] = await this.UserTable.update({ isDeleted: true }, { where: { id } });
 
-    if (result[1]) {
-      return result[1][0];
+    if (result > 0) {
+      return;
     }
 
     throw new Error();

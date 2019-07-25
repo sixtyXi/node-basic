@@ -29,7 +29,7 @@ class UserService {
     return this.userResource.updateUser(userId, userInfo);
   }
 
-  public deleteUserById(id: string): Promise<User> {
+  public deleteUserById(id: string): Promise<void> {
     return this.userResource.deleteUserById(id);
   }
 }

@@ -9,5 +9,5 @@ export default interface UserResourceContract {
 
   updateUser(userId: string, userInfo: UserInfo): Promise<User>;
 
-  deleteUserById(id: string): Promise<User>;
+  deleteUserById(id: string): Promise<void>;
 }

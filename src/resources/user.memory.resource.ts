@@ -50,12 +50,12 @@ class UserMemoryResource implements UserResourceContract {
     throw new Error();
   }
 
-  public async deleteUserById(id: string): Promise<User> {
+  public async deleteUserById(id: string): Promise<void> {
     const userToDelete = await this.getUserById(id);
 
     if (userToDelete) {
       userToDelete.isDeleted = true;
-      return userToDelete;
+      return;
     }
 
     throw new Error();
