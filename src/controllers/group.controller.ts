@@ -14,7 +14,6 @@ class GroupController {
   public async getGroups(req: Request, res: Response): Promise<void> {
     try {
       const groups = await this.groupService.getGroups();
-
       res.json(groups);
     } catch (error) {
       res.status(404).end();

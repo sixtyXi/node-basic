@@ -1,43 +1,38 @@
-import { Sequelize } from 'sequelize';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 
 import Group, { GroupInfo } from '../models/group.model';
-import { GroupTable, groupTableDataTypes } from '../schemas/group.schema';
-import GROUPS from '../mocks/groups';
+import { GroupDBModel } from '../db/models/group.db.model';
+import DbClient, { DbClientProvider } from '../db/dbClient';
 
 @injectable()
 class GroupDataBaseResource {
-  private sequelize = new Sequelize(`${process.env.POSTGRE_URI}`);
+  private dbProvider: DbClientProvider;
 
-  private GroupTable = GroupTable;
+  private db: DbClient | null;
 
-  public constructor() {
-    this.GroupTable.init(groupTableDataTypes, {
-      tableName: 'groups',
-      sequelize: this.sequelize,
-      timestamps: false
-    });
-
-    this.init();
+  public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
+    this.dbProvider = provider;
+    this.db = null;
   }
 
-  private async init(): Promise<void> {
-    try {
-      await this.sequelize.authenticate();
-      console.log('Connection was established successfully.');
-      await this.sequelize.sync({ force: true });
-      await this.GroupTable.bulkCreate(GROUPS);
-    } catch (error) {
-      console.error('Unable to connect to the database.', error);
+  private async getGroupsTable(): Promise<GroupDBModel> {
+    if (this.db) {
+      return this.db.groups;
     }
+
+    this.db = await this.dbProvider();
+    return this.db.groups;
   }
 
   public async getGroups(): Promise<Group[]> {
-    return this.GroupTable.findAll();
+    const groupsTable = await this.getGroupsTable();
+    return groupsTable.findAll();
   }
 
   public async getGroupById(id: string): Promise<Group> {
-    const group = await this.GroupTable.findByPk(id);
+    const groupsTable = await this.getGroupsTable();
+
+    const group = await groupsTable.findByPk(id);
 
     if (group) {
       return group;
@@ -47,11 +42,15 @@ class GroupDataBaseResource {
   }
 
   public async addGroup(group: Group): Promise<Group> {
-    return this.GroupTable.create(group);
+    const groupsTable = await this.getGroupsTable();
+
+    return groupsTable.create(group);
   }
 
   public async updateGroup(id: string, groupInfo: GroupInfo): Promise<Group> {
-    const result = await this.GroupTable.update(groupInfo, {
+    const groupsTable = await this.getGroupsTable();
+
+    const result = await groupsTable.update(groupInfo, {
       where: {
         id
       },
@@ -66,7 +65,9 @@ class GroupDataBaseResource {
   }
 
   public async deleteGroupById(id: string): Promise<void> {
-    const destroyedRows = await this.GroupTable.destroy({ where: { id } });
+    const groupsTable = await this.getGroupsTable();
+
+    const destroyedRows = await groupsTable.destroy({ where: { id } });
 
     if (destroyedRows > 0) {
       return;

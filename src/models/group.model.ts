@@ -13,15 +13,15 @@ export default class Group implements GroupInfo {
   }
 }
 
+export interface GroupInfo {
+  name: string;
+  permissions: Permission[];
+}
+
 export enum Permission {
   READ = 'READ',
   WRITE = 'WRITE',
   DELETE = 'DELETE',
   SHARE = 'SHARE',
   UPLOAD_FILES = 'UPLOAD_FILES'
-}
-
-export interface GroupInfo {
-  name: string;
-  permissions: Permission[];
 }
