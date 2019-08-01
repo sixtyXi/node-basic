@@ -15,15 +15,6 @@ class GroupDataBaseResource {
     this.db = null;
   }
 
-  private async getGroupsTable(): Promise<GroupDBModel> {
-    if (this.db) {
-      return this.db.groups;
-    }
-
-    this.db = await this.dbProvider();
-    return this.db.groups;
-  }
-
   public async getGroups(): Promise<Group[]> {
     const groupsTable = await this.getGroupsTable();
     return groupsTable.findAll();
@@ -31,25 +22,16 @@ class GroupDataBaseResource {
 
   public async getGroupById(id: string): Promise<Group> {
     const groupsTable = await this.getGroupsTable();
-
-    const group = await groupsTable.findByPk(id);
-
-    if (group) {
-      return group;
-    }
-
-    throw new Error();
+    return groupsTable.findByPk(id, { rejectOnEmpty: true });
   }
 
   public async addGroup(group: Group): Promise<Group> {
     const groupsTable = await this.getGroupsTable();
-
     return groupsTable.create(group);
   }
 
   public async updateGroup(id: string, groupInfo: GroupInfo): Promise<Group> {
     const groupsTable = await this.getGroupsTable();
-
     const result = await groupsTable.update(groupInfo, {
       where: {
         id
@@ -57,8 +39,10 @@ class GroupDataBaseResource {
       returning: true
     });
 
-    if (result[1]) {
-      return result[1][0];
+    const [updatedGroup] = result[1];
+
+    if (updatedGroup) {
+      return updatedGroup;
     }
 
     throw new Error();
@@ -74,6 +58,15 @@ class GroupDataBaseResource {
     }
 
     throw new Error();
+  }
+
+  private async getGroupsTable(): Promise<GroupDBModel> {
+    if (this.db) {
+      return this.db.groups;
+    }
+
+    this.db = await this.dbProvider();
+    return this.db.groups;
   }
 }
 

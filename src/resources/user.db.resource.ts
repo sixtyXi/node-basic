@@ -19,15 +19,6 @@ class UserDataBaseResource implements UserResourceContract {
     this.db = null;
   }
 
-  private async getUsersTable(): Promise<UserDBModel> {
-    if (this.db) {
-      return this.db.users;
-    }
-
-    this.db = await this.dbProvider();
-    return this.db.users;
-  }
-
   public async getUsers(): Promise<User[]> {
     const usersTable = await this.getUsersTable();
     return usersTable.findAll({ where: { isDeleted: { [ne]: true } } });
@@ -35,9 +26,9 @@ class UserDataBaseResource implements UserResourceContract {
 
   public async getUserById(id: string): Promise<User> {
     const usersTable = await this.getUsersTable();
-    const user = await usersTable.findByPk(id);
+    const user = await usersTable.findByPk(id, { rejectOnEmpty: true });
 
-    if (user && !user.isDeleted) {
+    if (!user.isDeleted) {
       return user;
     }
 
@@ -58,8 +49,10 @@ class UserDataBaseResource implements UserResourceContract {
       returning: true
     });
 
-    if (result[1]) {
-      return result[1][0];
+    const [updatedUser] = result[1];
+
+    if (updatedUser) {
+      return updatedUser;
     }
 
     throw new Error();
@@ -67,13 +60,22 @@ class UserDataBaseResource implements UserResourceContract {
 
   public async deleteUserById(id: string): Promise<void> {
     const usersTable = await this.getUsersTable();
-    const [result] = await usersTable.update({ isDeleted: true }, { where: { id } });
+    const [updatedRowsQty] = await usersTable.update({ isDeleted: true }, { where: { id } });
 
-    if (result > 0) {
+    if (updatedRowsQty > 0) {
       return;
     }
 
     throw new Error();
+  }
+
+  private async getUsersTable(): Promise<UserDBModel> {
+    if (this.db) {
+      return this.db.users;
+    }
+
+    this.db = await this.dbProvider();
+    return this.db.users;
   }
 }
 

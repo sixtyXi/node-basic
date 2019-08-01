@@ -3,7 +3,7 @@ import { Model, DataTypes, BuildOptions, Sequelize } from 'sequelize';
 import User from '../../models/user.model';
 import { USERS_TABLE } from '../constants';
 
-interface UserDB extends User, Model {}
+export interface UserDB extends User, Model {}
 
 export type UserDBModel = typeof Model & {
   new (values?: object, options?: BuildOptions): UserDB;
