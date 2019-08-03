@@ -1,8 +1,9 @@
 import { injectable, inject } from 'inversify';
 
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
-import UserDTO from '../models/user.dto.model';
+import UserRequestDTO from '../models/user.request.dto';
 import userMapper from '../mapper/user.mapper';
+import UserResponseDTO from '../models/user.response.dto';
 
 @injectable()
 class UserService {
@@ -12,30 +13,30 @@ class UserService {
     this.userRepository = userRepository;
   }
 
-  public async getUsers(): Promise<UserDTO[]> {
+  public async getUsers(): Promise<UserResponseDTO[]> {
     const users = await this.userRepository.getUsers();
 
-    return users.map(userMapper.toDTO);
+    return users.map(userMapper.toResponse);
   }
 
-  public async getUserById(id: string): Promise<UserDTO> {
+  public async getUserById(id: string): Promise<UserResponseDTO> {
     const user = await this.userRepository.getUserById(id);
 
-    return userMapper.toDTO(user);
+    return userMapper.toResponse(user);
   }
 
-  public async addUser(userDTO: UserDTO): Promise<UserDTO> {
+  public async addUser(userDTO: UserRequestDTO): Promise<UserResponseDTO> {
     const user = userMapper.toDomain(userDTO);
     const addedUser = await this.userRepository.addUser(user);
 
-    return userMapper.toDTO(addedUser);
+    return userMapper.toResponse(addedUser);
   }
 
-  public async updateUser(userDTO: UserDTO): Promise<UserDTO> {
+  public async updateUser(userDTO: UserRequestDTO): Promise<UserResponseDTO> {
     const user = userMapper.toDomain(userDTO);
     const updatedUser = await this.userRepository.updateUser(user);
 
-    return userMapper.toDTO(updatedUser);
+    return userMapper.toResponse(updatedUser);
   }
 
   public deleteUserById(id: string): Promise<void> {

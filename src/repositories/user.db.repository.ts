@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
-import User from '../models/user.model';
+import User from '../models/user.domain';
 import { DbClientProvider } from '../db/dbClient';
 import { UserDb } from '../db/models/user.db.model';
 

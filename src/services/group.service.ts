@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 
-import GroupDTO from '../models/group.dto.model';
+import GroupDTO from '../models/group.dto';
 import GroupDbRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
 

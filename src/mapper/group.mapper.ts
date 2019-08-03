@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 
-import Group from '../models/group.model';
-import GroupDTO from '../models/group.dto.model';
+import Group from '../models/group.domain';
+import GroupDTO from '../models/group.dto';
 
 const toDTO = (groupJson: GroupDTO): GroupDTO => {
   return plainToClass(GroupDTO, groupJson, { excludeExtraneousValues: true });

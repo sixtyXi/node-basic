@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 
 import UserGroupDbRepository from '../repositories/userGroup.db.repository';
 import { Permission } from '../types/permission';
-import Group from '../models/group.model';
+import Group from '../models/group.domain';
 import { hasAccess } from '../helpers/hasAccess';
 
 @injectable()

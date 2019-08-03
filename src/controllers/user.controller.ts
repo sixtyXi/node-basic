@@ -15,9 +15,8 @@ class UserController {
   public async getUsers(req: Request, res: Response): Promise<void> {
     try {
       const users = await this.userService.getUsers();
-      const usersToResponse = users.map(userMapper.toResponse);
 
-      res.json(usersToResponse);
+      res.json(users);
     } catch (error) {
       res.status(404).end();
     }
@@ -26,9 +25,8 @@ class UserController {
   public async getUserById(req: Request, res: Response): Promise<void> {
     try {
       const user = await this.userService.getUserById(req.params.userId);
-      const userToResponse = userMapper.toResponse(user);
 
-      res.json(userToResponse);
+      res.json(user);
     } catch (error) {
       res.status(404).end();
     }
@@ -36,11 +34,10 @@ class UserController {
 
   public async addUser(req: Request, res: Response): Promise<void> {
     try {
-      const user = userMapper.toDTO(req.body);
+      const user = userMapper.fromRequest(req.body);
       const addedUser = await this.userService.addUser(user);
-      const userToResponse = userMapper.toResponse(addedUser);
 
-      res.json(userToResponse);
+      res.json(addedUser);
     } catch (error) {
       res.status(400).end();
     }
@@ -49,16 +46,15 @@ class UserController {
   public async updateUser(req: Request, res: Response): Promise<void> {
     try {
       const { login, password, age } = req.body;
-      const user = userMapper.toDTO({
+      const user = userMapper.fromRequest({
         id: req.params.userId,
         login,
         password,
         age
       });
       const updatedUser = await this.userService.updateUser(user);
-      const userToResponse = userMapper.toResponse(updatedUser);
 
-      res.json(userToResponse);
+      res.json(updatedUser);
     } catch (error) {
       res.status(400).end();
     }

@@ -1,4 +1,4 @@
-import User from '../models/user.model';
+import User from '../models/user.domain';
 
 export default interface UserRepositoryContract {
   getUsers(): Promise<User[]>;

@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 
 import { DbClientProvider } from '../db/dbClient';
-import Group from '../models/group.model';
+import Group from '../models/group.domain';
 import groupMapper from '../mapper/group.mapper';
 
 @injectable()
