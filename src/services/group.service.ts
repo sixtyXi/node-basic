@@ -1,36 +1,45 @@
 import { injectable, inject } from 'inversify';
 
-import Group, { GroupInfo } from '../models/group.model';
-import GroupDataBaseResource from '../resources/group.db.resource';
+import GroupDTO from '../models/group.dto.model';
+import GroupDbRepository from '../repositories/group.db.repository';
+import groupMapper from '../mapper/group.mapper';
 
 @injectable()
 class GroupService {
-  private groupResource: GroupDataBaseResource;
+  private groupRepository: GroupDbRepository;
 
-  public constructor(@inject(GroupDataBaseResource) groupResource: GroupDataBaseResource) {
-    this.groupResource = groupResource;
+  public constructor(@inject(GroupDbRepository) groupRepository: GroupDbRepository) {
+    this.groupRepository = groupRepository;
   }
 
-  public getGroups(): Promise<Group[]> {
-    return this.groupResource.getGroups();
+  public async getGroups(): Promise<GroupDTO[]> {
+    const groups = await this.groupRepository.getGroups();
+
+    return groups.map(groupMapper.toDTO);
   }
 
-  public getGroupById(id: string): Promise<Group> {
-    return this.groupResource.getGroupById(id);
+  public async getGroupById(id: string): Promise<GroupDTO> {
+    const group = await this.groupRepository.getGroupById(id);
+
+    return groupMapper.toDTO(group);
   }
 
-  public addGroup(groupInfo: GroupInfo): Promise<Group> {
-    const group = new Group(groupInfo);
+  public async addGroup(groupDTO: GroupDTO): Promise<GroupDTO> {
+    const group = groupMapper.toDomain(groupDTO);
+    const addedGroup = await this.groupRepository.addGroup(group);
 
-    return this.groupResource.addGroup(group);
+    return groupMapper.toDTO(addedGroup);
   }
 
-  public updateGroup(groupId: string, groupInfo: GroupInfo): Promise<Group> {
-    return this.groupResource.updateGroup(groupId, groupInfo);
+  public async updateGroup(groupDTO: GroupDTO): Promise<GroupDTO> {
+    const group = groupMapper.toDomain(groupDTO);
+    const updatedGroup = await this.groupRepository.updateGroup(group);
+
+    return groupMapper.toDTO(updatedGroup);
   }
 
   public deleteGroupById(id: string): Promise<void> {
-    return this.groupResource.deleteGroupById(id);
+    return this.groupRepository.deleteGroupById(id);
   }
 }
 

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
 
 import GroupService from '../services/group.service';
+import groupMapper from '../mapper/group.mapper';
 
 @injectable()
 class GroupController {
@@ -14,6 +15,7 @@ class GroupController {
   public async getGroups(req: Request, res: Response): Promise<void> {
     try {
       const groups = await this.groupService.getGroups();
+
       res.json(groups);
     } catch (error) {
       res.status(404).end();
@@ -32,8 +34,8 @@ class GroupController {
 
   public async addGroup(req: Request, res: Response): Promise<void> {
     try {
-      const { name, permissions } = req.body;
-      const addedGroup = await this.groupService.addGroup({ name, permissions });
+      const group = groupMapper.toDTO(req.body);
+      const addedGroup = await this.groupService.addGroup(group);
 
       res.json(addedGroup);
     } catch (error) {
@@ -44,10 +46,8 @@ class GroupController {
   public async updateGroup(req: Request, res: Response): Promise<void> {
     try {
       const { name, permissions } = req.body;
-      const updatedGroup = await this.groupService.updateGroup(req.params.groupId, {
-        name,
-        permissions
-      });
+      const group = groupMapper.toDTO({ id: req.params.groupId, name, permissions });
+      const updatedGroup = await this.groupService.updateGroup(group);
 
       res.json(updatedGroup);
     } catch (error) {

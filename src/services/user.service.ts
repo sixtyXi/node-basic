@@ -1,36 +1,45 @@
 import { injectable, inject } from 'inversify';
 
-import User, { UserInfo } from '../models/user.model';
-import UserResourceContract from '../interfaces/UserResourceContract';
+import UserRepositoryContract from '../interfaces/UserRepositoryContract';
+import UserDTO from '../models/user.dto.model';
+import userMapper from '../mapper/user.mapper';
 
 @injectable()
 class UserService {
-  private userResource: UserResourceContract;
+  private userRepository: UserRepositoryContract;
 
-  public constructor(@inject('UserResourceContract') userResource: UserResourceContract) {
-    this.userResource = userResource;
+  public constructor(@inject('UserRepositoryContract') userRepository: UserRepositoryContract) {
+    this.userRepository = userRepository;
   }
 
-  public getUsers(): Promise<User[]> {
-    return this.userResource.getUsers();
+  public async getUsers(): Promise<UserDTO[]> {
+    const users = await this.userRepository.getUsers();
+
+    return users.map(userMapper.toDTO);
   }
 
-  public getUserById(id: string): Promise<User> {
-    return this.userResource.getUserById(id);
+  public async getUserById(id: string): Promise<UserDTO> {
+    const user = await this.userRepository.getUserById(id);
+
+    return userMapper.toDTO(user);
   }
 
-  public addUser(userInfo: UserInfo): Promise<User> {
-    const user = new User(userInfo);
+  public async addUser(userDTO: UserDTO): Promise<UserDTO> {
+    const user = userMapper.toDomain(userDTO);
+    const addedUser = await this.userRepository.addUser(user);
 
-    return this.userResource.addUser(user);
+    return userMapper.toDTO(addedUser);
   }
 
-  public updateUser(userId: string, userInfo: UserInfo): Promise<User> {
-    return this.userResource.updateUser(userId, userInfo);
+  public async updateUser(userDTO: UserDTO): Promise<UserDTO> {
+    const user = userMapper.toDomain(userDTO);
+    const updatedUser = await this.userRepository.updateUser(user);
+
+    return userMapper.toDTO(updatedUser);
   }
 
   public deleteUserById(id: string): Promise<void> {
-    return this.userResource.deleteUserById(id);
+    return this.userRepository.deleteUserById(id);
   }
 }
 
