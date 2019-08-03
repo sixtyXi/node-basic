@@ -1,12 +1,25 @@
-import { Model, DataTypes, BuildOptions, Sequelize } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  BuildOptions,
+  Sequelize,
+  BelongsToManyGetAssociationsMixin
+} from 'sequelize';
 
-import User from '../../models/user.model';
+import { GroupDb } from './group.db.model';
 import { USERS_TABLE } from '../constants';
 
-export interface UserDB extends User, Model {}
+export interface UserDb extends Model {
+  readonly id: string;
+  login: string;
+  password: string;
+  age: number;
+  getGroups: BelongsToManyGetAssociationsMixin<GroupDb>;
+  groups?: GroupDb[];
+}
 
-export type UserDBModel = typeof Model & {
-  new (values?: object, options?: BuildOptions): UserDB;
+export type UserDbModel = typeof Model & {
+  new (values?: object, options?: BuildOptions): UserDb;
 };
 
 const dataTypes = {
@@ -25,15 +38,11 @@ const dataTypes = {
   age: {
     type: DataTypes.INTEGER,
     allowNull: false
-  },
-  isDeleted: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
   }
 };
 
-const initUsers = (seq: Sequelize): UserDBModel => {
-  return seq.define(USERS_TABLE, dataTypes, { timestamps: false }) as UserDBModel;
+const userDbModelFactory = (seq: Sequelize): UserDbModel => {
+  return seq.define(USERS_TABLE, dataTypes, { paranoid: true }) as UserDbModel;
 };
 
-export default initUsers;
+export default userDbModelFactory;

@@ -1,25 +1,13 @@
 import { v4 as uuid } from 'uuid';
+import { Transform } from 'class-transformer';
 
-export default class User implements UserInfo {
+export default class User {
+  @Transform((value): string => value || uuid(), { toClassOnly: true })
   public readonly id: string = uuid();
 
-  public login: string;
+  public login!: string;
 
-  public password: string;
+  public password!: string;
 
-  public age: number;
-
-  public isDeleted: boolean = false;
-
-  public constructor(userInfo: UserInfo) {
-    this.login = userInfo.login;
-    this.password = userInfo.password;
-    this.age = userInfo.age;
-  }
-}
-
-export interface UserInfo {
-  login: string;
-  password: string;
-  age: number;
+  public age!: number;
 }

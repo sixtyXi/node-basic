@@ -1,12 +1,25 @@
-import { Model, DataTypes, BuildOptions, Sequelize } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  BuildOptions,
+  Sequelize,
+  BelongsToManyAddAssociationsMixin
+} from 'sequelize';
 
-import Group from '../../models/group.model';
+import { Permission } from '../../types/permission';
+import { UserDb } from './user.db.model';
 import { GROUPS_TABLE } from '../constants';
 
-interface GroupDB extends Group, Model {}
+export interface GroupDb extends Model {
+  readonly id: string;
+  name: string;
+  permissions: Permission[];
+  addUsers: BelongsToManyAddAssociationsMixin<UserDb, string>;
+  users?: UserDb[];
+}
 
-export type GroupDBModel = typeof Model & {
-  new (values?: object, options?: BuildOptions): GroupDB;
+export type GroupDbModel = typeof Model & {
+  new (values?: object, options?: BuildOptions): GroupDb;
 };
 
 const dataTypes = {
@@ -26,8 +39,8 @@ const dataTypes = {
   }
 };
 
-const initGroups = (seq: Sequelize): GroupDBModel => {
-  return seq.define(GROUPS_TABLE, dataTypes, { timestamps: false }) as GroupDBModel;
+const groupDbModelFactory = (seq: Sequelize): GroupDbModel => {
+  return seq.define(GROUPS_TABLE, dataTypes, { timestamps: false }) as GroupDbModel;
 };
 
-export default initGroups;
+export default groupDbModelFactory;

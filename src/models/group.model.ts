@@ -1,27 +1,16 @@
 import { v4 as uuid } from 'uuid';
+import { Transform, Expose } from 'class-transformer';
 
-export default class Group implements GroupInfo {
+import { Permission } from '../types/permission';
+
+export default class Group {
+  @Expose()
+  @Transform((value): string => value || uuid(), { toClassOnly: true })
   public readonly id: string = uuid();
 
-  public name: string;
+  @Expose()
+  public name!: string;
 
-  public permissions: Permission[];
-
-  public constructor(groupInfo: GroupInfo) {
-    this.name = groupInfo.name;
-    this.permissions = groupInfo.permissions;
-  }
-}
-
-export interface GroupInfo {
-  name: string;
-  permissions: Permission[];
-}
-
-export enum Permission {
-  READ = 'READ',
-  WRITE = 'WRITE',
-  DELETE = 'DELETE',
-  SHARE = 'SHARE',
-  UPLOAD_FILES = 'UPLOAD_FILES'
+  @Expose()
+  public permissions!: Permission[];
 }
