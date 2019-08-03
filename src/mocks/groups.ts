@@ -1,18 +1,12 @@
-import Group, { Permission } from '../models/group.model';
+import groupMapper from '../mapper/group.mapper';
 
 export default [
-  new Group({
+  groupMapper.toDomain({
     name: 'User',
-    permissions: [Permission.READ, Permission.WRITE, Permission.SHARE]
+    permissions: ['READ', 'WRITE', 'SHARE']
   }),
-  new Group({
+  groupMapper.toDomain({
     name: 'Admin',
-    permissions: [
-      Permission.READ,
-      Permission.WRITE,
-      Permission.SHARE,
-      Permission.DELETE,
-      Permission.UPLOAD_FILES
-    ]
+    permissions: ['READ', 'WRITE', 'SHARE', 'DELETE', 'UPLOAD_FILES']
   })
 ];
