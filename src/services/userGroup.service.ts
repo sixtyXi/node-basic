@@ -6,11 +6,10 @@ import { getBitPermission } from '../helpers/getBitPermission';
 
 @injectable()
 class UserGroupService {
-  private userGroupRepository: UserGroupOrmRepository;
-
-  public constructor(@inject(UserGroupOrmRepository) userGroupRepository: UserGroupOrmRepository) {
-    this.userGroupRepository = userGroupRepository;
-  }
+  public constructor(
+    @inject(UserGroupOrmRepository)
+    private userGroupRepository: UserGroupOrmRepository
+  ) {}
 
   public addUsersToGroup(groupId: string, userIds: string[]): Promise<void> {
     return this.userGroupRepository.addUsersToGroup(groupId, userIds);

@@ -5,12 +5,12 @@ import GroupController from '../controllers/group.controller';
 
 @injectable()
 class GroupRouter {
-  private groupController: GroupController;
-
   public router = Router();
 
-  public constructor(@inject(GroupController) groupController: GroupController) {
-    this.groupController = groupController;
+  public constructor(
+    @inject(GroupController)
+    private groupController: GroupController
+  ) {
     this.init();
   }
 

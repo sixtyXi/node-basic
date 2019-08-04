@@ -6,11 +6,10 @@ import groupMapper from '../mapper/group.mapper';
 
 @injectable()
 class UserGroupOrmRepository {
-  private dbProvider: DbClientProvider;
-
-  public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
-    this.dbProvider = provider;
-  }
+  public constructor(
+    @inject('DbClientProvider')
+    private dbProvider: DbClientProvider
+  ) {}
 
   public async addUsersToGroup(groupId: string, userIds: string[]): Promise<void> {
     const { groupOrm, sequelize } = await this.dbProvider();

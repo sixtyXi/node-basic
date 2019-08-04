@@ -5,12 +5,12 @@ import UserController from '../controllers/user.controller';
 
 @injectable()
 class UserRouter {
-  private userController: UserController;
-
   public router = Router();
 
-  public constructor(@inject(UserController) userController: UserController) {
-    this.userController = userController;
+  public constructor(
+    @inject(UserController)
+    private userController: UserController
+  ) {
     this.init();
   }
 

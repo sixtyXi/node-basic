@@ -7,11 +7,10 @@ import UserResponseDTO from '../models/DTO/user.response.dto';
 
 @injectable()
 class UserService {
-  private userRepository: UserRepositoryContract;
-
-  public constructor(@inject('UserRepositoryContract') userRepository: UserRepositoryContract) {
-    this.userRepository = userRepository;
-  }
+  public constructor(
+    @inject('UserRepositoryContract')
+    private userRepository: UserRepositoryContract
+  ) {}
 
   public async getUsers(): Promise<UserResponseDTO[]> {
     const users = await this.userRepository.getUsers();

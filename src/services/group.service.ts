@@ -6,11 +6,10 @@ import groupMapper from '../mapper/group.mapper';
 
 @injectable()
 class GroupService {
-  private groupRepository: GroupOrmRepository;
-
-  public constructor(@inject(GroupOrmRepository) groupRepository: GroupOrmRepository) {
-    this.groupRepository = groupRepository;
-  }
+  public constructor(
+    @inject(GroupOrmRepository)
+    private groupRepository: GroupOrmRepository
+  ) {}
 
   public async getGroups(): Promise<GroupDTO[]> {
     const groups = await this.groupRepository.getGroups();

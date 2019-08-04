@@ -7,11 +7,10 @@ import userMapper from '../mapper/user.mapper';
 
 @injectable()
 class UserOrmRepository implements UserRepositoryContract {
-  private dbProvider: DbClientProvider;
-
-  public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
-    this.dbProvider = provider;
-  }
+  public constructor(
+    @inject('DbClientProvider')
+    private dbProvider: DbClientProvider
+  ) {}
 
   public async getUsers(): Promise<User[]> {
     const { userOrm } = await this.dbProvider();

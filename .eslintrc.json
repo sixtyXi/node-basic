@@ -241,7 +241,6 @@
       }
     ],
     "semi": "off",
-    "@typescript-eslint/semi": ["error"],
     "keyword-spacing": 2,
     "space-before-blocks": 2,
     "space-before-function-paren": [
@@ -268,6 +267,10 @@
         "markers": ["=", "!"]
       }
     ],
+    "@typescript-eslint/semi": ["error"],
+    "@typescript-eslint/no-parameter-properties": 0,
+    "no-useless-constructor": 0,
+    "no-empty-function": 0,
 
     // Legacy
     "max-depth": [0, 4],
