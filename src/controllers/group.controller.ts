@@ -3,14 +3,16 @@ import { injectable, inject } from 'inversify';
 
 import GroupService from '../services/group.service';
 import groupMapper from '../mapper/group.mapper';
+import Validator from '../validator';
 
 @injectable()
 class GroupController {
-  private groupService: GroupService;
-
-  public constructor(@inject(GroupService) groupService: GroupService) {
-    this.groupService = groupService;
-  }
+  public constructor(
+    @inject(GroupService)
+    private groupService: GroupService,
+    @inject(Validator)
+    private validator: Validator
+  ) {}
 
   public async getGroups(req: Request, res: Response): Promise<void> {
     try {
@@ -24,7 +26,9 @@ class GroupController {
 
   public async getGroupById(req: Request, res: Response): Promise<void> {
     try {
-      const group = await this.groupService.getGroupById(req.params.groupId);
+      const id = req.params.groupId;
+      await this.validator.validateId(id);
+      const group = await this.groupService.getGroupById(id);
 
       res.json(group);
     } catch (error) {
@@ -35,6 +39,7 @@ class GroupController {
   public async addGroup(req: Request, res: Response): Promise<void> {
     try {
       const group = groupMapper.toDTO(req.body);
+      await this.validator.validateGroup(group);
       const addedGroup = await this.groupService.addGroup(group);
 
       res.json(addedGroup);
@@ -47,6 +52,7 @@ class GroupController {
     try {
       const { name, permissions } = req.body;
       const group = groupMapper.toDTO({ id: req.params.groupId, name, permissions });
+      await this.validator.validateGroup(group);
       const updatedGroup = await this.groupService.updateGroup(group);
 
       res.json(updatedGroup);

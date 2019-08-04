@@ -1,8 +1,8 @@
+import { AccessMask } from '../enums/accessMask';
 import { Permission } from '../types/permission';
-import { permissions as permissionsEnum } from '../enums/permissions';
 
-const reducer = (result: number, permission: Permission): number => {
-  return result | permissionsEnum[permission];
+const reducer = (result: number, key: Permission): number => {
+  return result | AccessMask[key];
 };
 
 export const getBitPermission = (permissions: Permission[]): number => {

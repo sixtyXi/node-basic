@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
 
-import userMapper from '../mapper/user.mapper';
 import UserService from '../services/user.service';
+import userMapper from '../mapper/user.mapper';
+import Validator from '../validator';
 
 @injectable()
 class UserController {
-  private userService: UserService;
-
-  public constructor(@inject(UserService) userService: UserService) {
-    this.userService = userService;
-  }
+  public constructor(
+    @inject(UserService)
+    private userService: UserService,
+    @inject(Validator)
+    private validator: Validator
+  ) {}
 
   public async getUsers(req: Request, res: Response): Promise<void> {
     try {
@@ -24,7 +26,9 @@ class UserController {
 
   public async getUserById(req: Request, res: Response): Promise<void> {
     try {
-      const user = await this.userService.getUserById(req.params.userId);
+      const id = req.params.userId;
+      await this.validator.validateId(id);
+      const user = await this.userService.getUserById(id);
 
       res.json(user);
     } catch (error) {
@@ -35,6 +39,7 @@ class UserController {
   public async addUser(req: Request, res: Response): Promise<void> {
     try {
       const user = userMapper.fromRequest(req.body);
+      await this.validator.validateUser(user);
       const addedUser = await this.userService.addUser(user);
 
       res.json(addedUser);
@@ -52,6 +57,7 @@ class UserController {
         password,
         age
       });
+      await this.validator.validateUser(user);
       const updatedUser = await this.userService.updateUser(user);
 
       res.json(updatedUser);

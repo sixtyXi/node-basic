@@ -1,4 +1,4 @@
-export enum permissions {
+export enum AccessMask {
   NONE = 0,
   READ = 1 << 0,
   WRITE = 1 << 1,

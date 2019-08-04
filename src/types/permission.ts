@@ -1,3 +1,3 @@
-import { permissions } from '../enums/permissions';
+import { AccessMask } from '../enums/accessMask';
 
-export type Permission = keyof typeof permissions;
+export type Permission = keyof typeof AccessMask;
