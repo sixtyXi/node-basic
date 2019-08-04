@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { Transform, Expose } from 'class-transformer';
 
-import { Permission } from '../types/permission';
+import { Permission } from '../../types/permission';
 
 export default class Group {
   @Expose()

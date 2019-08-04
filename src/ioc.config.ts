@@ -1,12 +1,13 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
-import DbClient, { DbClientProvider } from './db/dbClient';
+import DbClient from './db/dbClient';
+import { DbClientProvider } from './types/dbClientProvider';
 
 import UserRepositoryContract from './interfaces/UserRepositoryContract';
-import UserDbRepository from './repositories/user.db.repository';
-import GroupDbRepository from './repositories/group.db.repository';
-import UserGroupDbRepository from './repositories/userGroup.db.repository';
+import UserOrmRepository from './repositories/user.db.repository';
+import GroupOrmRepository from './repositories/group.db.repository';
+import UserGroupOrmRepository from './repositories/userGroup.db.repository';
 
 import UserService from './services/user.service';
 import GroupService from './services/group.service';
@@ -39,17 +40,17 @@ container.bind<DbClientProvider>('DbClientProvider').toProvider<DbClient>(
   }
 );
 
-container.bind<UserRepositoryContract>('UserRepositoryContract').to(UserDbRepository);
+container.bind<UserRepositoryContract>('UserRepositoryContract').to(UserOrmRepository);
 container.bind(UserService).toSelf();
 container.bind(UserController).toSelf();
 container.bind(UserRouter).toSelf();
 
-container.bind(GroupDbRepository).toSelf();
+container.bind(GroupOrmRepository).toSelf();
 container.bind(GroupService).toSelf();
 container.bind(GroupController).toSelf();
 container.bind(GroupRouter).toSelf();
 
-container.bind(UserGroupDbRepository).toSelf();
+container.bind(UserGroupOrmRepository).toSelf();
 container.bind(UserGroupService).toSelf();
 
 container.bind(RootRouter).toSelf();

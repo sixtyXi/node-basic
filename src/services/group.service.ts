@@ -1,14 +1,14 @@
 import { injectable, inject } from 'inversify';
 
-import GroupDTO from '../models/group.dto';
-import GroupDbRepository from '../repositories/group.db.repository';
+import GroupDTO from '../models/DTO/group.dto';
+import GroupOrmRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
 
 @injectable()
 class GroupService {
-  private groupRepository: GroupDbRepository;
+  private groupRepository: GroupOrmRepository;
 
-  public constructor(@inject(GroupDbRepository) groupRepository: GroupDbRepository) {
+  public constructor(@inject(GroupOrmRepository) groupRepository: GroupOrmRepository) {
     this.groupRepository = groupRepository;
   }
 

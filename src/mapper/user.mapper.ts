@@ -1,8 +1,9 @@
 import { plainToClass } from 'class-transformer';
 
-import User from '../models/user.domain';
-import UserRequestDTO from '../models/user.request.dto';
-import UserResponseDTO from '../models/user.response.dto';
+import User from '../models/Domain/user.domain';
+import UserRequestDTO from '../models/DTO/user.request.dto';
+import UserResponseDTO from '../models/DTO/user.response.dto';
+import { UserOrm } from '../models/ORM/user.orm';
 
 const fromRequest = (userJson: UserRequestDTO): UserRequestDTO => {
   return plainToClass(UserRequestDTO, userJson, { excludeExtraneousValues: true });
@@ -16,4 +17,8 @@ const toResponse = (userDomain: User): UserResponseDTO => {
   return plainToClass(UserResponseDTO, userDomain, { excludeExtraneousValues: true });
 };
 
-export default { fromRequest, toDomain, toResponse };
+const fromOrm = (userOrm: UserOrm): User => {
+  return userOrm.get({ plain: true }) as User;
+};
+
+export default { fromRequest, toDomain, toResponse, fromOrm };

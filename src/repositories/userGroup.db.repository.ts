@@ -1,11 +1,11 @@
 import { injectable, inject } from 'inversify';
 
-import { DbClientProvider } from '../db/dbClient';
-import Group from '../models/group.domain';
+import { DbClientProvider } from '../types/dbClientProvider';
+import Group from '../models/Domain/group.domain';
 import groupMapper from '../mapper/group.mapper';
 
 @injectable()
-class UserGroupDbRepository {
+class UserGroupOrmRepository {
   private dbProvider: DbClientProvider;
 
   public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
@@ -13,20 +13,20 @@ class UserGroupDbRepository {
   }
 
   public async addUsersToGroup(groupId: string, userIds: string[]): Promise<void> {
-    const { groupDbModel, sequelize } = await this.dbProvider();
+    const { groupOrm, sequelize } = await this.dbProvider();
 
     await sequelize.transaction(
       async (transaction): Promise<void> => {
-        const group = await groupDbModel.findByPk(groupId, { rejectOnEmpty: true, transaction });
+        const group = await groupOrm.findByPk(groupId, { rejectOnEmpty: true, transaction });
         return group.addUsers(userIds, { transaction });
       }
     );
   }
 
   public async getGroupsByUserId(userId: string): Promise<Group[]> {
-    const { userDbModel, groupDbModel } = await this.dbProvider();
-    const groups = await groupDbModel.findAll({
-      include: [{ model: userDbModel, as: 'users', where: { id: userId } }]
+    const { userOrm, groupOrm } = await this.dbProvider();
+    const groups = await groupOrm.findAll({
+      include: [{ model: userOrm, as: 'users', where: { id: userId } }]
     });
 
     if (groups.length) {
@@ -36,4 +36,4 @@ class UserGroupDbRepository {
   }
 }
 
-export default UserGroupDbRepository;
+export default UserGroupOrmRepository;

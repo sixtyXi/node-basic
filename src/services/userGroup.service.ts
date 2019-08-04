@@ -1,15 +1,15 @@
 import { injectable, inject } from 'inversify';
 
-import UserGroupDbRepository from '../repositories/userGroup.db.repository';
+import UserGroupOrmRepository from '../repositories/userGroup.db.repository';
 import { Permission } from '../types/permission';
-import Group from '../models/group.domain';
+import Group from '../models/Domain/group.domain';
 import { hasAccess } from '../helpers/hasAccess';
 
 @injectable()
 class UserGroupService {
-  private userGroupRepository: UserGroupDbRepository;
+  private userGroupRepository: UserGroupOrmRepository;
 
-  public constructor(@inject(UserGroupDbRepository) userGroupRepository: UserGroupDbRepository) {
+  public constructor(@inject(UserGroupOrmRepository) userGroupRepository: UserGroupOrmRepository) {
     this.userGroupRepository = userGroupRepository;
   }
 

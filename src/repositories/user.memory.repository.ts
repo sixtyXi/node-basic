@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import User from '../models/user.domain';
+import User from '../models/Domain/user.domain';
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
 import { USERS } from '../mocks/users';
 

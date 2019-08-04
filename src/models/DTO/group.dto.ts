@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import { Permission } from '../types/permission';
+import { Permission } from '../../types/permission';
 
 export default class GroupDTO {
   @Expose()

@@ -1,12 +1,12 @@
 import { injectable, inject } from 'inversify';
 
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
-import User from '../models/user.domain';
-import { DbClientProvider } from '../db/dbClient';
-import { UserDb } from '../db/models/user.db.model';
+import User from '../models/Domain/user.domain';
+import { DbClientProvider } from '../types/dbClientProvider';
+import userMapper from '../mapper/user.mapper';
 
 @injectable()
-class UserDbRepository implements UserRepositoryContract {
+class UserOrmRepository implements UserRepositoryContract {
   private dbProvider: DbClientProvider;
 
   public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
@@ -14,32 +14,32 @@ class UserDbRepository implements UserRepositoryContract {
   }
 
   public async getUsers(): Promise<User[]> {
-    const { userDbModel } = await this.dbProvider();
-    const users = await userDbModel.findAll();
+    const { userOrm } = await this.dbProvider();
+    const users = await userOrm.findAll();
 
-    return users.map(UserDbRepository.getPlainUser);
+    return users.map(userMapper.fromOrm);
   }
 
   public async getUserById(id: string): Promise<User> {
-    const { userDbModel } = await this.dbProvider();
-    const user = await userDbModel.findOne({
+    const { userOrm } = await this.dbProvider();
+    const user = await userOrm.findOne({
       where: { id },
       rejectOnEmpty: true
     });
 
-    return UserDbRepository.getPlainUser(user);
+    return userMapper.fromOrm(user);
   }
 
   public async addUser(user: User): Promise<User> {
-    const { userDbModel } = await this.dbProvider();
-    const addedUser = await userDbModel.create(user);
+    const { userOrm } = await this.dbProvider();
+    const addedUser = await userOrm.create(user);
 
-    return UserDbRepository.getPlainUser(addedUser);
+    return userMapper.fromOrm(addedUser);
   }
 
   public async updateUser(user: User): Promise<User> {
-    const { userDbModel } = await this.dbProvider();
-    const result = await userDbModel.update(user, {
+    const { userOrm } = await this.dbProvider();
+    const result = await userOrm.update(user, {
       where: {
         id: user.id
       },
@@ -49,15 +49,15 @@ class UserDbRepository implements UserRepositoryContract {
     const [updatedUser] = result[1];
 
     if (updatedUser) {
-      return UserDbRepository.getPlainUser(updatedUser);
+      return userMapper.fromOrm(updatedUser);
     }
 
     throw new Error();
   }
 
   public async deleteUserById(id: string): Promise<void> {
-    const { userDbModel } = await this.dbProvider();
-    const destroyedRows = await userDbModel.destroy({ where: { id } });
+    const { userOrm } = await this.dbProvider();
+    const destroyedRows = await userOrm.destroy({ where: { id } });
 
     if (destroyedRows > 0) {
       return;
@@ -65,10 +65,6 @@ class UserDbRepository implements UserRepositoryContract {
 
     throw new Error();
   }
-
-  private static getPlainUser(user: UserDb): User {
-    return user.get({ plain: true }) as User;
-  }
 }
 
-export default UserDbRepository;
+export default UserOrmRepository;

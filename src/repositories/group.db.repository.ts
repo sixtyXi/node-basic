@@ -1,11 +1,11 @@
 import { injectable, inject } from 'inversify';
 
-import { DbClientProvider } from '../db/dbClient';
-import Group from '../models/group.domain';
-import { GroupDb } from '../db/models/group.db.model';
+import { DbClientProvider } from '../types/dbClientProvider';
+import Group from '../models/Domain/group.domain';
+import groupMapper from '../mapper/group.mapper';
 
 @injectable()
-class GroupDbRepository {
+class GroupOrmRepository {
   private dbProvider: DbClientProvider;
 
   public constructor(@inject('DbClientProvider') provider: DbClientProvider) {
@@ -13,28 +13,28 @@ class GroupDbRepository {
   }
 
   public async getGroups(): Promise<Group[]> {
-    const { groupDbModel } = await this.dbProvider();
-    const groups = await groupDbModel.findAll();
+    const { groupOrm } = await this.dbProvider();
+    const groups = await groupOrm.findAll();
 
-    return groups.map(GroupDbRepository.getPlainGroup);
+    return groups.map(groupMapper.fromOrm);
   }
 
   public async getGroupById(id: string): Promise<Group> {
-    const { groupDbModel } = await this.dbProvider();
+    const { groupOrm } = await this.dbProvider();
 
-    return groupDbModel.findByPk(id, { rejectOnEmpty: true, plain: true });
+    return groupOrm.findByPk(id, { rejectOnEmpty: true, plain: true });
   }
 
   public async addGroup(group: Group): Promise<Group> {
-    const { groupDbModel } = await this.dbProvider();
-    const addedGroup = await groupDbModel.create(group);
+    const { groupOrm } = await this.dbProvider();
+    const addedGroup = await groupOrm.create(group);
 
-    return GroupDbRepository.getPlainGroup(addedGroup);
+    return groupMapper.fromOrm(addedGroup);
   }
 
   public async updateGroup(group: Group): Promise<Group> {
-    const { groupDbModel } = await this.dbProvider();
-    const result = await groupDbModel.update(group, {
+    const { groupOrm } = await this.dbProvider();
+    const result = await groupOrm.update(group, {
       where: {
         id: group.id
       },
@@ -44,15 +44,15 @@ class GroupDbRepository {
     const [updatedGroup] = result[1];
 
     if (updatedGroup) {
-      return GroupDbRepository.getPlainGroup(updatedGroup);
+      return groupMapper.fromOrm(updatedGroup);
     }
 
     throw new Error();
   }
 
   public async deleteGroupById(id: string): Promise<void> {
-    const { groupDbModel } = await this.dbProvider();
-    const destroyedRows = await groupDbModel.destroy({ where: { id } });
+    const { groupOrm } = await this.dbProvider();
+    const destroyedRows = await groupOrm.destroy({ where: { id } });
 
     if (destroyedRows > 0) {
       return;
@@ -60,10 +60,6 @@ class GroupDbRepository {
 
     throw new Error();
   }
-
-  private static getPlainGroup(group: GroupDb): Group {
-    return group.get({ plain: true }) as Group;
-  }
 }
 
-export default GroupDbRepository;
+export default GroupOrmRepository;

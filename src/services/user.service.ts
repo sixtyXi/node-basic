@@ -1,9 +1,9 @@
 import { injectable, inject } from 'inversify';
 
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
-import UserRequestDTO from '../models/user.request.dto';
+import UserRequestDTO from '../models/DTO/user.request.dto';
 import userMapper from '../mapper/user.mapper';
-import UserResponseDTO from '../models/user.response.dto';
+import UserResponseDTO from '../models/DTO/user.response.dto';
 
 @injectable()
 class UserService {

@@ -1,35 +1,30 @@
 import { Sequelize } from 'sequelize';
 import { injectable } from 'inversify';
 
-import buildGroupModel, { GroupDbModel } from './models/group.db.model';
-import buildUserModel, { UserDbModel } from './models/user.db.model';
-import buildUserGroupModel, { UserGroupDbModel } from './models/userGroup.db.model';
+import buildGroupOrm, { GroupOrmInstance } from './group.builder';
+import buildUserOrm, { UserOrmInstance } from './user.builder';
+import buildUserGroupOrm, { UserGroupOrmInstance } from './userGroup.builder';
+
 import GROUPS from '../mocks/groups';
 import { USERS } from '../mocks/users';
 import USERS_GROUPS from '../mocks/usersGroups';
-
-export type DbClientProvider = () => Promise<DbClient>;
 
 @injectable()
 class DbClient {
   public sequelize = new Sequelize(`${process.env.POSTGRE_URI}`);
 
-  public userDbModel: UserDbModel;
+  public userOrm: UserOrmInstance;
 
-  public groupDbModel: GroupDbModel;
+  public groupOrm: GroupOrmInstance;
 
-  public userGroupDbModel: UserGroupDbModel;
+  public userGroupOrm: UserGroupOrmInstance;
 
   public isAuthenticated: boolean = false;
 
   public constructor() {
-    this.userDbModel = buildUserModel(this.sequelize);
-    this.groupDbModel = buildGroupModel(this.sequelize);
-    this.userGroupDbModel = buildUserGroupModel(
-      this.sequelize,
-      this.userDbModel,
-      this.groupDbModel
-    );
+    this.userOrm = buildUserOrm(this.sequelize);
+    this.groupOrm = buildGroupOrm(this.sequelize);
+    this.userGroupOrm = buildUserGroupOrm(this.sequelize, this.userOrm, this.groupOrm);
   }
 
   public async init(): Promise<void> {
@@ -40,9 +35,9 @@ class DbClient {
   }
 
   private async addDefaultDataToDb(): Promise<void> {
-    await this.userDbModel.bulkCreate(USERS);
-    await this.groupDbModel.bulkCreate(GROUPS);
-    await this.userGroupDbModel.bulkCreate(USERS_GROUPS);
+    await this.userOrm.bulkCreate(USERS);
+    await this.groupOrm.bulkCreate(GROUPS);
+    await this.userGroupOrm.bulkCreate(USERS_GROUPS);
   }
 }
 
