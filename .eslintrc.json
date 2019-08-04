@@ -272,7 +272,7 @@
     // Legacy
     "max-depth": [0, 4],
     "max-params": [2, 7],
-    "no-bitwise": 2
+    "no-bitwise": 0
   },
   "globals": {
     "$": true,

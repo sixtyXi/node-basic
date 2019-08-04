@@ -2,8 +2,7 @@ import { injectable, inject } from 'inversify';
 
 import UserGroupOrmRepository from '../repositories/userGroup.db.repository';
 import { Permission } from '../types/permission';
-import Group from '../models/Domain/group.domain';
-import { hasAccess } from '../helpers/hasAccess';
+import { getBitPermission } from '../helpers/getBitPermission';
 
 @injectable()
 class UserGroupService {
@@ -19,14 +18,17 @@ class UserGroupService {
 
   public async checkUserHasPermissions(
     userId: string,
-    permissions: Permission[]
+    needPermissions: Permission[]
   ): Promise<boolean> {
     const groups = await this.userGroupRepository.getGroupsByUserId(userId);
-    const currentPermissions = groups.reduce(
-      (arr: Permission[], group: Group): Permission[] => arr.concat(group.permissions),
-      []
+
+    const currentBitPermissions = groups.reduce(
+      (result, group): number => result | getBitPermission(group.permissions),
+      0
     );
-    return hasAccess(currentPermissions, permissions);
+    const needBitPermissions = getBitPermission(needPermissions);
+
+    return needBitPermissions === (currentBitPermissions & needBitPermissions);
   }
 }
 

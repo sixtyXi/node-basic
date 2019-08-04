@@ -1,6 +1,7 @@
 import { Model, DataTypes, BelongsToManyAddAssociationsMixin } from 'sequelize';
 
 import { Permission } from '../../types/permission';
+import { getAllPermissions } from '../../helpers/getAllPermissions';
 import { UserOrm } from './user.orm';
 
 export interface GroupOrm extends Model {
@@ -17,13 +18,11 @@ export const dataTypes = {
     primaryKey: true
   },
   name: {
-    type: new DataTypes.STRING(128),
+    type: new DataTypes.STRING(64),
     allowNull: false
   },
   permissions: {
-    type: new DataTypes.ARRAY(
-      DataTypes.ENUM({ values: ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'] })
-    ),
+    type: new DataTypes.ARRAY(DataTypes.ENUM({ values: getAllPermissions() })),
     allowNull: false
   }
 };

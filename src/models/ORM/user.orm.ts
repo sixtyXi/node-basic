@@ -17,11 +17,11 @@ export const dataTypes = {
     primaryKey: true
   },
   login: {
-    type: new DataTypes.STRING(128),
+    type: new DataTypes.STRING(64),
     allowNull: false
   },
   password: {
-    type: new DataTypes.STRING(128),
+    type: new DataTypes.STRING(64),
     allowNull: false
   },
   age: {

@@ -1,1 +1,3 @@
-export type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
+import { permissions } from '../enums/permissions';
+
+export type Permission = keyof typeof permissions;
