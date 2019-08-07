@@ -17,14 +17,14 @@ class UserRouter {
   private init(): void {
     this.router
       .route('/')
-      .get(this.userController.getUsers.bind(this.userController))
-      .post(this.userController.addUser.bind(this.userController));
+      .get(this.userController.getUsers)
+      .post(this.userController.addUser);
 
     this.router
       .route('/:userId')
-      .get(this.userController.getUserById.bind(this.userController))
-      .put(this.userController.updateUser.bind(this.userController))
-      .delete(this.userController.deleteUser.bind(this.userController));
+      .get(this.userController.getUserById)
+      .put(this.userController.updateUser)
+      .delete(this.userController.deleteUser);
   }
 }
 

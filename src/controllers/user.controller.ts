@@ -14,7 +14,7 @@ class UserController {
     private validator: Validator
   ) {}
 
-  public async getUsers(req: Request, res: Response): Promise<void> {
+  public getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
       const users = await this.userService.getUsers();
 
@@ -24,7 +24,7 @@ class UserController {
     }
   }
 
-  public async getUserById(req: Request, res: Response): Promise<void> {
+  public getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.params.userId;
       await this.validator.validateId(id);
@@ -36,7 +36,7 @@ class UserController {
     }
   }
 
-  public async addUser(req: Request, res: Response): Promise<void> {
+  public addUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const user = userMapper.fromRequest(req.body);
       await this.validator.validateUser(user);
@@ -48,7 +48,7 @@ class UserController {
     }
   }
 
-  public async updateUser(req: Request, res: Response): Promise<void> {
+  public updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const { login, password, age } = req.body;
       const user = userMapper.fromRequest({
@@ -66,7 +66,7 @@ class UserController {
     }
   }
 
-  public async deleteUser(req: Request, res: Response): Promise<void> {
+  public deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
       await this.userService.deleteUserById(req.params.userId);
       res.status(200).end();

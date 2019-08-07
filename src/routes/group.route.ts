@@ -17,14 +17,14 @@ class GroupRouter {
   private init(): void {
     this.router
       .route('/')
-      .get(this.groupController.getGroups.bind(this.groupController))
-      .post(this.groupController.addGroup.bind(this.groupController));
+      .get(this.groupController.getGroups)
+      .post(this.groupController.addGroup);
 
     this.router
       .route('/:groupId')
-      .get(this.groupController.getGroupById.bind(this.groupController))
-      .put(this.groupController.updateGroup.bind(this.groupController))
-      .delete(this.groupController.deleteGroup.bind(this.groupController));
+      .get(this.groupController.getGroupById)
+      .put(this.groupController.updateGroup)
+      .delete(this.groupController.deleteGroup);
   }
 }
 

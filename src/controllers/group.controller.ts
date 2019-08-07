@@ -14,7 +14,7 @@ class GroupController {
     private validator: Validator
   ) {}
 
-  public async getGroups(req: Request, res: Response): Promise<void> {
+  public getGroups = async (req: Request, res: Response): Promise<void> => {
     try {
       const groups = await this.groupService.getGroups();
 
@@ -24,7 +24,7 @@ class GroupController {
     }
   }
 
-  public async getGroupById(req: Request, res: Response): Promise<void> {
+  public getGroupById = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.params.groupId;
       await this.validator.validateId(id);
@@ -36,7 +36,7 @@ class GroupController {
     }
   }
 
-  public async addGroup(req: Request, res: Response): Promise<void> {
+  public addGroup = async (req: Request, res: Response): Promise<void> => {
     try {
       const group = groupMapper.toDTO(req.body);
       await this.validator.validateGroup(group);
@@ -48,7 +48,7 @@ class GroupController {
     }
   }
 
-  public async updateGroup(req: Request, res: Response): Promise<void> {
+  public updateGroup = async (req: Request, res: Response): Promise<void> => {
     try {
       const { name, permissions } = req.body;
       const group = groupMapper.toDTO({ id: req.params.groupId, name, permissions });
@@ -61,7 +61,7 @@ class GroupController {
     }
   }
 
-  public async deleteGroup(req: Request, res: Response): Promise<void> {
+  public deleteGroup = async (req: Request, res: Response): Promise<void> => {
     try {
       await this.groupService.deleteGroupById(req.params.groupId);
       res.status(200).end();
