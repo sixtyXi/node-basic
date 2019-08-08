@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { injectable, inject } from 'inversify';
 
+import middlewares from '../middlewares';
 import UserController from '../controllers/user.controller';
+import PhotoController from '../controllers/photo.controller';
 
 @injectable()
 class UserRouter {
@@ -9,7 +11,9 @@ class UserRouter {
 
   public constructor(
     @inject(UserController)
-    private userController: UserController
+    private userController: UserController,
+    @inject(PhotoController)
+    private photoController: PhotoController
   ) {
     this.init();
   }
@@ -25,6 +29,15 @@ class UserRouter {
       .get(this.userController.getUserById)
       .put(this.userController.updateUser)
       .delete(this.userController.deleteUser);
+
+    this.router
+      .route('/:userId/photo')
+      .get(this.photoController.getUserPhoto)
+      .post(
+        middlewares.userExists,
+        middlewares.uploadSingle('photo'),
+        this.photoController.addUserPhoto
+      );
   }
 }
 

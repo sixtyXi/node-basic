@@ -22,7 +22,7 @@ class UserController {
     } catch (error) {
       res.status(404).end();
     }
-  }
+  };
 
   public getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -34,7 +34,7 @@ class UserController {
     } catch (error) {
       res.status(404).end();
     }
-  }
+  };
 
   public addUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -46,7 +46,7 @@ class UserController {
     } catch (error) {
       res.status(400).end();
     }
-  }
+  };
 
   public updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -64,7 +64,7 @@ class UserController {
     } catch (error) {
       res.status(400).end();
     }
-  }
+  };
 
   public deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -73,7 +73,7 @@ class UserController {
     } catch (error) {
       res.status(400).end();
     }
-  }
+  };
 }
 
 export default UserController;

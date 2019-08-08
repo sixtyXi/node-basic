@@ -15,6 +15,7 @@ import UserGroupService from './services/userGroup.service';
 
 import UserController from './controllers/user.controller';
 import GroupController from './controllers/group.controller';
+import PhotoController from './controllers/photo.controller';
 
 import Validator from './validator';
 
@@ -54,6 +55,8 @@ container.bind(GroupRouter).toSelf();
 
 container.bind(UserGroupOrmRepository).toSelf();
 container.bind(UserGroupService).toSelf();
+
+container.bind(PhotoController).toSelf();
 
 container.bind(Validator).toSelf();
 
