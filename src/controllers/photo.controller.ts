@@ -7,7 +7,6 @@ class PhotoController {
     try {
       const id = req.params.userId;
       // TODO create photoMetaDto
-      const { path, mimetype } = req.file;
       res.status(200).end();
     } catch (error) {
       res.status(400).end();

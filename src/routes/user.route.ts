@@ -33,11 +33,7 @@ class UserRouter {
     this.router
       .route('/:userId/photo')
       .get(this.photoController.getUserPhoto)
-      .post(
-        middlewares.userExists,
-        middlewares.uploadSingle('photo'),
-        this.photoController.addUserPhoto
-      );
+      .post(middlewares.userExists, this.photoController.addUserPhoto);
   }
 }
 
