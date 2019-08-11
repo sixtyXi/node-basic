@@ -8,10 +8,12 @@ import UserRepositoryContract from './interfaces/UserRepositoryContract';
 import UserOrmRepository from './repositories/user.db.repository';
 import GroupOrmRepository from './repositories/group.db.repository';
 import UserGroupOrmRepository from './repositories/userGroup.db.repository';
+import PhotoOrmRepository from './repositories/photo.db.repository';
 
 import UserService from './services/user.service';
 import GroupService from './services/group.service';
 import UserGroupService from './services/userGroup.service';
+import PhotoService from './services/photo.service';
 
 import UserController from './controllers/user.controller';
 import GroupController from './controllers/group.controller';
@@ -56,6 +58,8 @@ container.bind(GroupRouter).toSelf();
 container.bind(UserGroupOrmRepository).toSelf();
 container.bind(UserGroupService).toSelf();
 
+container.bind(PhotoOrmRepository).toSelf();
+container.bind(PhotoService).toSelf();
 container.bind(PhotoController).toSelf();
 
 container.bind(Validator).toSelf();

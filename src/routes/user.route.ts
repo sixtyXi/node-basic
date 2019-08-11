@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { injectable, inject } from 'inversify';
 
-import middlewares from '../middlewares';
 import UserController from '../controllers/user.controller';
 import PhotoController from '../controllers/photo.controller';
 
@@ -33,7 +32,7 @@ class UserRouter {
     this.router
       .route('/:userId/photo')
       .get(this.photoController.getUserPhoto)
-      .post(middlewares.userExists, this.photoController.addUserPhoto);
+      .post(this.photoController.addUserPhoto);
   }
 }
 

@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { injectable } from 'inversify';
 
+import buildPhotoOrm, { PhotoOrmInstance } from './photo.builder';
 import buildGroupOrm, { GroupOrmInstance } from './group.builder';
 import buildUserOrm, { UserOrmInstance } from './user.builder';
 import buildUserGroupOrm, { UserGroupOrmInstance } from './userGroup.builder';
@@ -13,6 +14,8 @@ import USERS_GROUPS from '../mocks/usersGroups';
 class DbClient {
   public sequelize = new Sequelize(`${process.env.POSTGRE_URI}`);
 
+  public photoOrm: PhotoOrmInstance;
+
   public userOrm: UserOrmInstance;
 
   public groupOrm: GroupOrmInstance;
@@ -22,7 +25,8 @@ class DbClient {
   public isAuthenticated: boolean = false;
 
   public constructor() {
-    this.userOrm = buildUserOrm(this.sequelize);
+    this.photoOrm = buildPhotoOrm(this.sequelize);
+    this.userOrm = buildUserOrm(this.sequelize, this.photoOrm);
     this.groupOrm = buildGroupOrm(this.sequelize);
     this.userGroupOrm = buildUserGroupOrm(this.sequelize, this.userOrm, this.groupOrm);
   }

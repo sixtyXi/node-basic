@@ -1,6 +1,13 @@
-import { Model, DataTypes, BelongsToManyGetAssociationsMixin } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  BelongsToManyGetAssociationsMixin,
+  HasOneGetAssociationMixin,
+  HasOneSetAssociationMixin
+} from 'sequelize';
 
 import { GroupOrm } from './group.orm';
+import { PhotoOrm } from './photo.orm';
 
 export interface UserOrm extends Model {
   readonly id: string;
@@ -8,6 +15,8 @@ export interface UserOrm extends Model {
   password: string;
   age: number;
   getGroups: BelongsToManyGetAssociationsMixin<GroupOrm>;
+  getPhoto: HasOneGetAssociationMixin<PhotoOrm>;
+  setPhoto: HasOneSetAssociationMixin<PhotoOrm, PhotoOrm['id']>;
   groups?: GroupOrm[];
 }
 
