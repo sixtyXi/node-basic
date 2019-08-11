@@ -42,8 +42,8 @@ class PhotoController {
       const id = req.params.userId;
       await this.validator.validateId(id);
       const photo = await this.photoService.getUserPhoto(id);
-
-      res.json(photo);
+      res.set('Content-Type', photo.type);
+      res.sendFile(photo.path);
     } catch (error) {
       res.status(404).end();
     }
