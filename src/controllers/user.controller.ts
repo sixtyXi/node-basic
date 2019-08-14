@@ -17,8 +17,9 @@ class UserController {
   public getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
       const users = await this.userService.getUsers();
+      const userDtos = users.map(userMapper.toResponse);
 
-      res.json(users);
+      res.json(userDtos);
     } catch (error) {
       res.status(404).end();
     }
@@ -29,8 +30,8 @@ class UserController {
       const id = req.params.userId;
       await this.validator.validateId(id);
       const user = await this.userService.getUserById(id);
-
-      res.json(user);
+      const userDto = userMapper.toResponse(user);
+      res.json(userDto);
     } catch (error) {
       res.status(404).end();
     }
@@ -41,8 +42,9 @@ class UserController {
       const user = userMapper.fromRequest(req.body);
       await this.validator.validateUser(user);
       const addedUser = await this.userService.addUser(user);
+      const userDto = userMapper.toResponse(addedUser);
 
-      res.json(addedUser);
+      res.json(userDto);
     } catch (error) {
       res.status(400).end();
     }
@@ -59,8 +61,9 @@ class UserController {
       });
       await this.validator.validateUser(user);
       const updatedUser = await this.userService.updateUser(user);
+      const updatedUserDto = userMapper.toResponse(updatedUser);
 
-      res.json(updatedUser);
+      res.json(updatedUserDto);
     } catch (error) {
       res.status(400).end();
     }
