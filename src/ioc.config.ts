@@ -37,9 +37,7 @@ container.bind<DbClientProvider>('DbClientProvider').toProvider<DbClient>(
   (context): DbClientProvider => {
     return async (): Promise<DbClient> => {
       const dbClient = context.container.get<DbClient>('DbClient');
-      if (!dbClient.isAuthenticated) {
-        await dbClient.init();
-      }
+      await dbClient.init();
       return dbClient;
     };
   }

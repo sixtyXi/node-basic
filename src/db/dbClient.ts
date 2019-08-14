@@ -22,7 +22,7 @@ class DbClient {
 
   public userGroupOrm: UserGroupOrmInstance;
 
-  public isAuthenticated: boolean = false;
+  private isInitialized: boolean = false;
 
   public constructor() {
     this.photoOrm = buildPhotoOrm(this.sequelize);
@@ -32,10 +32,12 @@ class DbClient {
   }
 
   public async init(): Promise<void> {
-    await this.sequelize.authenticate();
-    await this.sequelize.sync({ force: true });
-    await this.addDefaultDataToDb();
-    this.isAuthenticated = true;
+    if (!this.isInitialized) {
+      await this.sequelize.authenticate();
+      await this.sequelize.sync({ force: true });
+      await this.addDefaultDataToDb();
+      this.isInitialized = true;
+    }
   }
 
   private async addDefaultDataToDb(): Promise<void> {
