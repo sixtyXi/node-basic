@@ -3,3 +3,4 @@ dist
 output
 uploads
 .eslintcache
+coverage
