@@ -1,0 +1,192 @@
+{
+  "info": {
+    "_postman_id": "bafe6e00-02b7-49a0-89ac-eda6b122438c",
+    "name": "Users",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "655783f2-6201-42f9-abcb-7d65728e3a39",
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.globals.set(\"userId\", response[0].id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get user by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "dd3086dd-b562-4549-908f-115946984931",
+            "exec": ["", ""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"login\": \"John\",\n    \"password\": \"001\",\n    \"age\": 25\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update user",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"login\": \"This user has updated login\",\n    \"password\": \"123\",\n    \"age\": 20\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "dd3086dd-b562-4549-908f-115946984931",
+            "exec": ["", ""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data; boundary=???"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "photo",
+              "type": "file",
+              "src": "src/postman-collections/Kenny.png"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}/photo",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}", "photo"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get photo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}/photo",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}", "photo"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete user",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -15,7 +15,8 @@
     "down": "docker-compose down",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
+    "newman": "newman run src/postman-collections/Users.postman_collection.json && newman run src/postman-collections/Groups.postman_collection.json"
   },
   "repository": {
     "type": "git",
@@ -58,6 +59,7 @@
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "inversify": "^5.0.1",
+    "newman": "^4.5.4",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
