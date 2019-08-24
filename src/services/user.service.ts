@@ -1,36 +1,37 @@
 import { injectable, inject } from 'inversify';
 
-import User, { UserInfo } from '../models/user.model';
-import UserResourceContract from '../interfaces/UserResourceContract';
+import UserRepositoryContract from '../interfaces/UserRepositoryContract';
+import UserRequestDTO from '../models/DTO/user.request.dto';
+import userMapper from '../mapper/user.mapper';
+import User from '../models/Domain/user.domain';
 
 @injectable()
 class UserService {
-  private userResource: UserResourceContract;
-
-  public constructor(@inject('UserResourceContract') userResource: UserResourceContract) {
-    this.userResource = userResource;
-  }
+  public constructor(
+    @inject('UserRepositoryContract')
+    private userRepository: UserRepositoryContract
+  ) {}
 
   public getUsers(): Promise<User[]> {
-    return this.userResource.getUsers();
+    return this.userRepository.getUsers();
   }
 
   public getUserById(id: string): Promise<User> {
-    return this.userResource.getUserById(id);
+    return this.userRepository.getUserById(id);
   }
 
-  public addUser(userInfo: UserInfo): Promise<User> {
-    const user = new User(userInfo);
-
-    return this.userResource.addUser(user);
+  public addUser(userDTO: UserRequestDTO): Promise<User> {
+    const user = userMapper.toDomain(userDTO);
+    return this.userRepository.addUser(user);
   }
 
-  public updateUser(userId: string, userInfo: UserInfo): Promise<User> {
-    return this.userResource.updateUser(userId, userInfo);
+  public updateUser(userDTO: UserRequestDTO): Promise<User> {
+    const user = userMapper.toDomain(userDTO);
+    return this.userRepository.updateUser(user);
   }
 
-  public deleteUserById(id: string): Promise<User> {
-    return this.userResource.deleteUserById(id);
+  public deleteUserById(id: string): Promise<void> {
+    return this.userRepository.deleteUserById(id);
   }
 }
 

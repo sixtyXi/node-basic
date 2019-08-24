@@ -2,31 +2,37 @@ import { Router } from 'express';
 import { injectable, inject } from 'inversify';
 
 import UserController from '../controllers/user.controller';
+import PhotoController from '../controllers/photo.controller';
 
 @injectable()
 class UserRouter {
-  private BASE_URL = '/users';
-
-  private userController: UserController;
-
   public router = Router();
 
-  public constructor(@inject(UserController) userController: UserController) {
-    this.userController = userController;
+  public constructor(
+    @inject(UserController)
+    private userController: UserController,
+    @inject(PhotoController)
+    private photoController: PhotoController
+  ) {
     this.init();
   }
 
   private init(): void {
     this.router
-      .route(this.BASE_URL)
-      .get(this.userController.getUsers.bind(this.userController))
-      .post(this.userController.addUser.bind(this.userController));
+      .route('/')
+      .get(this.userController.getUsers)
+      .post(this.userController.addUser);
 
     this.router
-      .route(`${this.BASE_URL}/:userId`)
-      .get(this.userController.getUserById.bind(this.userController))
-      .put(this.userController.updateUser.bind(this.userController))
-      .delete(this.userController.deleteUser.bind(this.userController));
+      .route('/:userId')
+      .get(this.userController.getUserById)
+      .put(this.userController.updateUser)
+      .delete(this.userController.deleteUser);
+
+    this.router
+      .route('/:userId/photo')
+      .get(this.photoController.getUserPhoto)
+      .post(this.photoController.addUserPhoto);
   }
 }
 
