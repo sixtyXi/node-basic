@@ -18,10 +18,11 @@ class GroupOrmRepository {
     return groups.map(groupMapper.fromOrm);
   }
 
-  public async getGroupById(id: string): Promise<Group> {
+  public async getGroupById(id: string): Promise<Group | null> {
     const { groupOrm } = await this.dbProvider();
+    const group = await groupOrm.findByPk(id);
 
-    return groupOrm.findByPk(id, { rejectOnEmpty: true, plain: true });
+    return group && groupMapper.fromOrm(group);
   }
 
   public async addGroup(group: Group): Promise<Group> {
@@ -31,7 +32,7 @@ class GroupOrmRepository {
     return groupMapper.fromOrm(addedGroup);
   }
 
-  public async updateGroup(group: Group): Promise<Group> {
+  public async updateGroup(group: Group): Promise<Group | null> {
     const { groupOrm } = await this.dbProvider();
     const result = await groupOrm.update(group, {
       where: {
@@ -40,24 +41,14 @@ class GroupOrmRepository {
       returning: true
     });
 
-    const [updatedGroup] = result[1];
+    const [updatedGroup = null] = result[1];
 
-    if (updatedGroup) {
-      return groupMapper.fromOrm(updatedGroup);
-    }
-
-    throw new Error();
+    return updatedGroup && groupMapper.fromOrm(updatedGroup);
   }
 
-  public async deleteGroupById(id: string): Promise<void> {
+  public async deleteGroupById(id: string): Promise<number> {
     const { groupOrm } = await this.dbProvider();
-    const destroyedRows = await groupOrm.destroy({ where: { id } });
-
-    if (destroyedRows > 0) {
-      return;
-    }
-
-    throw new Error();
+    return groupOrm.destroy({ where: { id } });
   }
 }
 

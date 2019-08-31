@@ -3,6 +3,8 @@ import { injectable } from 'inversify';
 
 import UserRequestDTO from '../models/DTO/user.request.dto';
 import GroupDTO from '../models/DTO/group.dto';
+import CustomError from '../types/CustomError';
+import { ErrorType } from '../enums/errorTypes';
 
 @injectable()
 class Validator {
@@ -12,16 +14,21 @@ class Validator {
 
   public async validateId(id: string): Promise<void> {
     if (!this.validator.isUUID(id)) {
-      throw new Error('id must be an UUID');
+      throw new CustomError(
+        ErrorType.Validation,
+        this.validateId.name,
+        { id },
+        'id must be an UUID'
+      );
     }
   }
 
   public validateUser(object: UserRequestDTO): Promise<void> {
-    return this.validate(object);
+    return this.validate(object, { validationError: { target: false } });
   }
 
   public validateGroup(object: GroupDTO): Promise<void> {
-    return this.validate(object);
+    return this.validate(object, { validationError: { target: false } });
   }
 }
 

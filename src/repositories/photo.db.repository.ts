@@ -11,20 +11,34 @@ class PhotoOrmRepository {
     private dbProvider: DbClientProvider
   ) {}
 
-  public async addUserPhoto(userId: string, photo: Photo): Promise<Photo> {
-    const { userOrm, photoOrm } = await this.dbProvider();
+  public async addUserPhoto(userId: string, photo: Photo): Promise<Photo | null> {
+    const { userOrm, photoOrm, sequelize } = await this.dbProvider();
 
-    const addedPhoto = await photoOrm.create(photo);
-    const user = await userOrm.findOne({ where: { id: userId }, rejectOnEmpty: true });
-    await user.setPhoto(addedPhoto);
-    return photoMapper.fromOrm(addedPhoto);
+    return sequelize.transaction(
+      async (transaction): Promise<Photo | null> => {
+        const user = await userOrm.findOne({ where: { id: userId }, transaction });
+        let addedPhoto = null;
+
+        if (user) {
+          addedPhoto = await photoOrm.create(photo, { transaction });
+          await user.setPhoto(addedPhoto, { transaction });
+        }
+
+        return addedPhoto && photoMapper.fromOrm(addedPhoto);
+      }
+    );
   }
 
-  public async getUserPhoto(userId: string): Promise<Photo> {
+  public async getUserPhoto(userId: string): Promise<Photo | null> {
     const { userOrm } = await this.dbProvider();
-    const user = await userOrm.findOne({ where: { id: userId }, rejectOnEmpty: true });
-    const photo = await user.getPhoto();
-    return photoMapper.fromOrm(photo);
+    const user = await userOrm.findOne({ where: { id: userId } });
+    let photo = null;
+
+    if (user) {
+      photo = await user.getPhoto();
+    }
+
+    return photo && photoMapper.fromOrm(photo);
   }
 }
 

@@ -19,14 +19,13 @@ class UserOrmRepository implements UserRepositoryContract {
     return users.map(userMapper.fromOrm);
   }
 
-  public async getUserById(id: string): Promise<User> {
+  public async getUserById(id: string): Promise<User | null> {
     const { userOrm } = await this.dbProvider();
     const user = await userOrm.findOne({
-      where: { id },
-      rejectOnEmpty: true
+      where: { id }
     });
 
-    return userMapper.fromOrm(user);
+    return user && userMapper.fromOrm(user);
   }
 
   public async addUser(user: User): Promise<User> {
@@ -36,7 +35,7 @@ class UserOrmRepository implements UserRepositoryContract {
     return userMapper.fromOrm(addedUser);
   }
 
-  public async updateUser(user: User): Promise<User> {
+  public async updateUser(user: User): Promise<User | null> {
     const { userOrm } = await this.dbProvider();
     const result = await userOrm.update(user, {
       where: {
@@ -45,24 +44,14 @@ class UserOrmRepository implements UserRepositoryContract {
       returning: true
     });
 
-    const [updatedUser] = result[1];
+    const [updatedUser = null] = result[1];
 
-    if (updatedUser) {
-      return userMapper.fromOrm(updatedUser);
-    }
-
-    throw new Error();
+    return updatedUser && userMapper.fromOrm(updatedUser);
   }
 
-  public async deleteUserById(id: string): Promise<void> {
+  public async deleteUserById(id: string): Promise<number> {
     const { userOrm } = await this.dbProvider();
-    const destroyedRows = await userOrm.destroy({ where: { id } });
-
-    if (destroyedRows > 0) {
-      return;
-    }
-
-    throw new Error();
+    return userOrm.destroy({ where: { id } });
   }
 }
 

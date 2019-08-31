@@ -14,14 +14,10 @@ class UserMemoryRepository implements UserRepositoryContract {
     return allUsers;
   }
 
-  public async getUserById(id: string): Promise<User> {
+  public async getUserById(id: string): Promise<User | null> {
     const foundUser = this.users.find((user): boolean => user.id === id && !user.isDeleted);
 
-    if (foundUser) {
-      return foundUser;
-    }
-
-    throw new Error();
+    return foundUser || null;
   }
 
   public async addUser(user: User): Promise<User> {
@@ -29,8 +25,8 @@ class UserMemoryRepository implements UserRepositoryContract {
     return user as User;
   }
 
-  public async updateUser(userToUpdate: User): Promise<User> {
-    let updatedUser;
+  public async updateUser(userToUpdate: User): Promise<User | null> {
+    let updatedUser = null;
 
     this.users = this.users.map(
       (user): UserMemory => {
@@ -43,22 +39,17 @@ class UserMemoryRepository implements UserRepositoryContract {
       }
     );
 
-    if (updatedUser) {
-      return updatedUser;
-    }
-
-    throw new Error();
+    return updatedUser;
   }
 
-  public async deleteUserById(id: string): Promise<void> {
+  public async deleteUserById(id: string): Promise<number> {
     const userToDelete = (await this.getUserById(id)) as UserMemory;
 
     if (userToDelete) {
       userToDelete.isDeleted = true;
-      return;
     }
 
-    throw new Error();
+    return userToDelete ? 1 : 0;
   }
 }
 
