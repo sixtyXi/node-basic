@@ -5,6 +5,7 @@ import { ValidationError } from 'class-validator';
 
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
+import { logger } from '../logger';
 
 function errorHandler(
   err: CustomError | Error | ValidationError[],
@@ -23,6 +24,7 @@ function errorHandler(
     errorMessage = err.message;
   }
 
+  logger.error(err);
   res.status(statusCode).send(errorMessage);
 }
 

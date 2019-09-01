@@ -3,6 +3,12 @@ import express, { Application } from 'express';
 import container from './ioc.config';
 import RootRouter from './routes/root.route';
 import errorHandler from './middlewares/errorHandler';
+import { logger } from './logger';
+
+process.on('uncaughtException', (error: Error): void => {
+  logger.log('error', `${new Date().toUTCString()} uncaughtException: ${error.message}`);
+  process.exit(1);
+});
 
 const app: Application = express();
 const { router } = container.get(RootRouter);
