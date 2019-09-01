@@ -47,7 +47,7 @@ class UserController {
   public addUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const user = userMapper.fromRequest(req.body);
-      await this.validator.validateUser(user);
+      await this.validator.validateDto(user);
       const addedUser = await this.userService.addUser(user);
       const userDto = userMapper.toResponse(addedUser);
 
@@ -67,7 +67,7 @@ class UserController {
         password,
         age
       });
-      await this.validator.validateUser(user);
+      await this.validator.validateDto(user);
       const updatedUser = await this.userService.updateUser(user);
 
       if (updatedUser) {

@@ -4,6 +4,7 @@ import container from './ioc.config';
 import RootRouter from './routes/root.route';
 import errorHandler from './middlewares/errorHandler';
 import timing from './middlewares/timing';
+import authGuard from './middlewares/authGuard';
 import { logger } from './logger';
 
 process.on('uncaughtException', (error: Error): void => {
@@ -16,6 +17,7 @@ const { router } = container.get(RootRouter);
 
 app.use(timing);
 app.use(express.json());
+app.use(authGuard);
 app.use('/', router);
 app.use(errorHandler);
 

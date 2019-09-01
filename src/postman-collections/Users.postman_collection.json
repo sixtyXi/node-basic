@@ -6,6 +6,56 @@
   },
   "item": [
     {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7ee6b128-b41d-4d72-bab7-cedc665502ae",
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.globals.set(\"token\", response.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "foo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"John\",\n    \"password\": \"1234\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["login"]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Get users",
       "event": [
         {
@@ -23,7 +73,13 @@
       ],
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "http://localhost:3000/users",
           "protocol": "http",
@@ -38,7 +94,13 @@
       "name": "Get user by ID",
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "http://localhost:3000/users/{{userId}}",
           "protocol": "http",
@@ -69,6 +131,11 @@
             "name": "Content-Type",
             "value": "application/json",
             "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
           }
         ],
         "body": {
@@ -94,6 +161,11 @@
             "key": "Content-Type",
             "name": "Content-Type",
             "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
             "type": "text"
           }
         ],
@@ -129,6 +201,11 @@
           {
             "key": "Content-Type",
             "value": "multipart/form-data; boundary=???"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
           }
         ],
         "body": {
@@ -155,7 +232,13 @@
       "name": "Get photo",
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "http://localhost:3000/users/{{userId}}/photo",
           "protocol": "http",
@@ -175,6 +258,11 @@
             "key": "Content-Type",
             "name": "Content-Type",
             "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
             "type": "text"
           }
         ],

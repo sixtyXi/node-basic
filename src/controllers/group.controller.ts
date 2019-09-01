@@ -47,7 +47,7 @@ class GroupController {
   public addGroup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const group = groupMapper.toDTO(req.body);
-      await this.validator.validateGroup(group);
+      await this.validator.validateDto(group);
       const addedGroup = await this.groupService.addGroup(group);
       const groupDto = groupMapper.toDTO(addedGroup);
 
@@ -62,7 +62,7 @@ class GroupController {
       const { name, permissions } = req.body;
       const id = req.params.groupId;
       const group = groupMapper.toDTO({ id, name, permissions });
-      await this.validator.validateGroup(group);
+      await this.validator.validateDto(group);
       const updatedGroup = await this.groupService.updateGroup(group);
 
       if (updatedGroup) {
