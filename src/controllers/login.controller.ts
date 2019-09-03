@@ -18,7 +18,7 @@ class LoginController {
     try {
       const login = loginMapper.fromRequest(req.body);
       await this.validator.validateDto(login);
-      const token = await this.loginService.getToken(login);
+      const token = await LoginService.getToken(login);
 
       res.json({ token });
     } catch (error) {

@@ -4,8 +4,7 @@ import GroupDTO from '../models/DTO/group.dto';
 import GroupOrmRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
 import Group from '../models/Domain/group.domain';
-import CustomError from '../types/CustomError';
-import { ErrorType } from '../enums/errorTypes';
+import { catchErrors } from '../helpers/catch';
 
 @injectable()
 class GroupService {
@@ -14,51 +13,31 @@ class GroupService {
     private groupRepository: GroupOrmRepository
   ) {}
 
-  public async getGroups(): Promise<Group[]> {
-    try {
-      const groups = await this.groupRepository.getGroups();
-      return groups;
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.getGroups.name, {});
-    }
+  @catchErrors()
+  public getGroups(): Promise<Group[]> {
+    return this.groupRepository.getGroups();
   }
 
-  public async getGroupById(id: string): Promise<Group | null> {
-    try {
-      const group = await this.groupRepository.getGroupById(id);
-      return group;
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.getGroupById.name, { id });
-    }
+  @catchErrors()
+  public getGroupById(id: string): Promise<Group | null> {
+    return this.groupRepository.getGroupById(id);
   }
 
-  public async addGroup(groupDTO: GroupDTO): Promise<Group> {
-    try {
-      const group = groupMapper.toDomain(groupDTO);
-      const addedGroup = await this.groupRepository.addGroup(group);
-      return addedGroup;
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.addGroup.name, { groupDTO });
-    }
+  @catchErrors()
+  public addGroup(groupDTO: GroupDTO): Promise<Group> {
+    const group = groupMapper.toDomain(groupDTO);
+    return this.groupRepository.addGroup(group);
   }
 
+  @catchErrors()
   public async updateGroup(groupDTO: GroupDTO): Promise<Group | null> {
-    try {
-      const group = groupMapper.toDomain(groupDTO);
-      const updatedGroup = await this.groupRepository.updateGroup(group);
-      return updatedGroup;
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.updateGroup.name, { groupDTO });
-    }
+    const group = groupMapper.toDomain(groupDTO);
+    return this.groupRepository.updateGroup(group);
   }
 
+  @catchErrors()
   public async deleteGroupById(id: string): Promise<number> {
-    try {
-      const deletedRows = await this.groupRepository.deleteGroupById(id);
-      return deletedRows;
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.deleteGroupById.name, { id });
-    }
+    return this.groupRepository.deleteGroupById(id);
   }
 }
 

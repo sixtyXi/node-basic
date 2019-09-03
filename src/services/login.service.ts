@@ -1,19 +1,17 @@
 import { injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 
-import CustomError from '../types/CustomError';
-import { ErrorType } from '../enums/errorTypes';
 import LoginDTO from '../models/DTO/login.dto';
+import { catchErrors } from '../helpers/catch';
 
 @injectable()
 class LoginService {
-  public async getToken(login: LoginDTO): Promise<string> {
-    try {
-      const { name, password } = login;
-      return jwt.sign({ name, password }, 'secret', { expiresIn: 60 });
-    } catch (error) {
-      throw new CustomError(ErrorType.Application, this.getToken.name, { login });
-    }
+  @catchErrors()
+  public static async getToken(login: LoginDTO): Promise<string> {
+    const { name, password } = login;
+    const secret = process.env.SECRET || 'secret';
+
+    return jwt.sign({ name, password }, secret, { expiresIn: 60 });
   }
 }
 
