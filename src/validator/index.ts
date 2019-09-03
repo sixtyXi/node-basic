@@ -1,6 +1,5 @@
 import { Validator as ClassValidator, validateOrReject } from 'class-validator';
 import { injectable } from 'inversify';
-import jwt from 'jsonwebtoken';
 
 import UserRequestDTO from '../models/DTO/user.request.dto';
 import LoginDTO from '../models/DTO/login.dto';
@@ -23,19 +22,6 @@ class Validator {
         'id must be an UUID'
       );
     }
-  }
-
-  public validateToken(token: string): Promise<object | string> {
-    return new Promise((resolve, reject): void => {
-      jwt.verify(token, 'secret', (err, decoded): void => {
-        if (err) {
-          reject(
-            new CustomError(ErrorType.Validation, this.validateToken.name, { token }, err.message)
-          );
-        }
-        resolve(decoded);
-      });
-    });
   }
 
   public validateDto(object: UserRequestDTO | GroupDTO | LoginDTO): Promise<void> {

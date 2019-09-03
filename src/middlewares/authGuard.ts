@@ -13,7 +13,9 @@ function authGuard(req: Request, res: Response, next: NextFunction): void {
   const token = req.headers.authorization;
 
   if (token) {
-    jwt.verify(token, 'secret', (err: Error): void => {
+    const secret = process.env.SECRET || 'secret';
+
+    jwt.verify(token, secret, (err: Error): void => {
       if (err) {
         next(new CustomError(ErrorType.Forbidden, authGuard.name, { token }, err.message));
       } else next();
