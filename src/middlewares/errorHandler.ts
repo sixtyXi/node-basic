@@ -25,7 +25,7 @@ function errorHandler(
   }
 
   logger.error(err);
-  res.status(statusCode).send(errorMessage);
+  res.status(statusCode).send({ message: errorMessage });
 }
 
 export default errorHandler;

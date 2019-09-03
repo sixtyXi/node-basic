@@ -6,8 +6,7 @@ import { logger } from '../logger';
 
 function timing(req: Request, res: Response, next: NextFunction): void {
   const startTime = performance.now();
-  // eslint-disable-next-line prefer-destructuring
-  const end = res.end;
+  const { end } = res;
 
   res.end = ((chunk: any, encoding: string): void => {
     const responseTime = Math.round(performance.now() - startTime);
@@ -15,12 +14,14 @@ function timing(req: Request, res: Response, next: NextFunction): void {
     res.end = end;
     res.end(chunk, encoding);
 
-    logger.info({
+    const logMessage = {
+      statusCode: res.statusCode,
       url: req.originalUrl || req.url,
       method: req.method,
-      statusCode: res.statusCode,
       responseTime
-    });
+    };
+
+    logger.log('info', JSON.stringify(logMessage));
   }) as any;
 
   next();
