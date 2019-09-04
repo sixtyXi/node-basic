@@ -18,13 +18,15 @@ class GroupRouter {
     this.router
       .route('/')
       .get(this.groupController.getGroups)
-      .post(this.groupController.addGroup);
+      .post(this.groupController.addGroup)
+      .all(this.groupController.notAllowed);
 
     this.router
       .route('/:groupId')
       .get(this.groupController.getGroupById)
       .put(this.groupController.updateGroup)
-      .delete(this.groupController.deleteGroup);
+      .delete(this.groupController.deleteGroup)
+      .all(this.groupController.notAllowed);
   }
 }
 

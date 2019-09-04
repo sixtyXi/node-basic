@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import 'reflect-metadata';
 import uuid from 'uuid';
 
@@ -45,7 +46,7 @@ describe('User service', (): void => {
 
     expect(mockUserOrmRepository.getUserById).toHaveBeenCalled();
     expect(user).toBeInstanceOf(User);
-    expect(user.id).toBe(userId);
+    expect(user!.id).toBe(userId);
   });
 
   it('should update user', async (): Promise<void> => {
@@ -55,10 +56,10 @@ describe('User service', (): void => {
 
     expect(mockUserOrmRepository.updateUser).toHaveBeenCalled();
     expect(updatedUser).toBeInstanceOf(User);
-    expect(updatedUser.login).toBe(userDto.login);
-    expect(updatedUser.age).toBe(userDto.age);
-    expect(updatedUser.password).toBe(userDto.password);
-    expect(updatedUser.id).toBe(userDto.id);
+    expect(updatedUser!.login).toBe(userDto.login);
+    expect(updatedUser!.age).toBe(userDto.age);
+    expect(updatedUser!.password).toBe(userDto.password);
+    expect(updatedUser!.id).toBe(userDto.id);
   });
 
   it('should invoke deleteUserById from repository', async (): Promise<void> => {

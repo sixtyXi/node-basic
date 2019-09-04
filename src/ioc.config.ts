@@ -14,15 +14,18 @@ import UserService from './services/user.service';
 import GroupService from './services/group.service';
 import UserGroupService from './services/userGroup.service';
 import PhotoService from './services/photo.service';
+import LoginService from './services/login.service';
 
 import UserController from './controllers/user.controller';
 import GroupController from './controllers/group.controller';
 import PhotoController from './controllers/photo.controller';
+import LoginController from './controllers/login.controller';
 
 import Validator from './validator';
 
 import UserRouter from './routes/user.route';
 import GroupRouter from './routes/group.route';
+import LoginRouter from './routes/login.route';
 
 import RootRouter from './routes/root.route';
 
@@ -59,6 +62,10 @@ container.bind(UserGroupService).toSelf();
 container.bind(PhotoOrmRepository).toSelf();
 container.bind(PhotoService).toSelf();
 container.bind(PhotoController).toSelf();
+
+container.bind(LoginService).toSelf();
+container.bind(LoginController).toSelf();
+container.bind(LoginRouter).toSelf();
 
 container.bind(Validator).toSelf();
 

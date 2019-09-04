@@ -3,6 +3,8 @@ import { injectable, inject } from 'inversify';
 import UserGroupOrmRepository from '../repositories/userGroup.db.repository';
 import { Permission } from '../types/permission';
 import { getBitPermission } from '../helpers/getBitPermission';
+import Group from '../models/Domain/group.domain';
+import { catchErrors } from '../helpers/catch';
 
 @injectable()
 class UserGroupService {
@@ -11,10 +13,12 @@ class UserGroupService {
     private userGroupRepository: UserGroupOrmRepository
   ) {}
 
-  public addUsersToGroup(groupId: string, userIds: string[]): Promise<void> {
+  @catchErrors()
+  public addUsersToGroup(groupId: string, userIds: string[]): Promise<Group | null> {
     return this.userGroupRepository.addUsersToGroup(groupId, userIds);
   }
 
+  @catchErrors()
   public async checkUserHasPermissions(
     userId: string,
     needPermissions: Permission[]

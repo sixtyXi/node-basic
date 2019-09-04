@@ -3,6 +3,8 @@ import { injectable, inject } from 'inversify';
 import GroupDTO from '../models/DTO/group.dto';
 import GroupOrmRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
+import Group from '../models/Domain/group.domain';
+import { catchErrors } from '../helpers/catch';
 
 @injectable()
 class GroupService {
@@ -11,33 +13,30 @@ class GroupService {
     private groupRepository: GroupOrmRepository
   ) {}
 
-  public async getGroups(): Promise<GroupDTO[]> {
-    const groups = await this.groupRepository.getGroups();
-
-    return groups.map(groupMapper.toDTO);
+  @catchErrors()
+  public getGroups(): Promise<Group[]> {
+    return this.groupRepository.getGroups();
   }
 
-  public async getGroupById(id: string): Promise<GroupDTO> {
-    const group = await this.groupRepository.getGroupById(id);
-
-    return groupMapper.toDTO(group);
+  @catchErrors()
+  public getGroupById(id: string): Promise<Group | null> {
+    return this.groupRepository.getGroupById(id);
   }
 
-  public async addGroup(groupDTO: GroupDTO): Promise<GroupDTO> {
+  @catchErrors()
+  public addGroup(groupDTO: GroupDTO): Promise<Group> {
     const group = groupMapper.toDomain(groupDTO);
-    const addedGroup = await this.groupRepository.addGroup(group);
-
-    return groupMapper.toDTO(addedGroup);
+    return this.groupRepository.addGroup(group);
   }
 
-  public async updateGroup(groupDTO: GroupDTO): Promise<GroupDTO> {
+  @catchErrors()
+  public async updateGroup(groupDTO: GroupDTO): Promise<Group | null> {
     const group = groupMapper.toDomain(groupDTO);
-    const updatedGroup = await this.groupRepository.updateGroup(group);
-
-    return groupMapper.toDTO(updatedGroup);
+    return this.groupRepository.updateGroup(group);
   }
 
-  public deleteGroupById(id: string): Promise<void> {
+  @catchErrors()
+  public async deleteGroupById(id: string): Promise<number> {
     return this.groupRepository.deleteGroupById(id);
   }
 }

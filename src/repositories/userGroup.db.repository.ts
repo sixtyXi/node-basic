@@ -11,13 +11,18 @@ class UserGroupOrmRepository {
     private dbProvider: DbClientProvider
   ) {}
 
-  public async addUsersToGroup(groupId: string, userIds: string[]): Promise<void> {
+  public async addUsersToGroup(groupId: string, userIds: string[]): Promise<Group | null> {
     const { groupOrm, sequelize } = await this.dbProvider();
 
-    await sequelize.transaction(
-      async (transaction): Promise<void> => {
-        const group = await groupOrm.findByPk(groupId, { rejectOnEmpty: true, transaction });
-        return group.addUsers(userIds, { transaction });
+    return sequelize.transaction(
+      async (transaction): Promise<Group | null> => {
+        const group = await groupOrm.findByPk(groupId, { transaction });
+
+        if (group) {
+          await group.addUsers(userIds, { transaction });
+        }
+
+        return group && groupMapper.fromOrm(group);
       }
     );
   }
@@ -28,10 +33,7 @@ class UserGroupOrmRepository {
       include: [{ model: userOrm, as: 'users', where: { id: userId } }]
     });
 
-    if (groups.length) {
-      return groups.map(groupMapper.toDomain);
-    }
-    throw new Error();
+    return groups.map(groupMapper.toDomain);
   }
 }
 

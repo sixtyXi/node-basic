@@ -4,6 +4,7 @@ import UserRepositoryContract from '../interfaces/UserRepositoryContract';
 import UserRequestDTO from '../models/DTO/user.request.dto';
 import userMapper from '../mapper/user.mapper';
 import User from '../models/Domain/user.domain';
+import { catchErrors } from '../helpers/catch';
 
 @injectable()
 class UserService {
@@ -12,25 +13,30 @@ class UserService {
     private userRepository: UserRepositoryContract
   ) {}
 
+  @catchErrors()
   public getUsers(): Promise<User[]> {
     return this.userRepository.getUsers();
   }
 
-  public getUserById(id: string): Promise<User> {
+  @catchErrors()
+  public getUserById(id: string): Promise<User | null> {
     return this.userRepository.getUserById(id);
   }
 
+  @catchErrors()
   public addUser(userDTO: UserRequestDTO): Promise<User> {
     const user = userMapper.toDomain(userDTO);
     return this.userRepository.addUser(user);
   }
 
-  public updateUser(userDTO: UserRequestDTO): Promise<User> {
+  @catchErrors()
+  public updateUser(userDTO: UserRequestDTO): Promise<User | null> {
     const user = userMapper.toDomain(userDTO);
     return this.userRepository.updateUser(user);
   }
 
-  public deleteUserById(id: string): Promise<void> {
+  @catchErrors()
+  public deleteUserById(id: string): Promise<number> {
     return this.userRepository.deleteUserById(id);
   }
 }
