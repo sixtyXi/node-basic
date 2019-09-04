@@ -21,7 +21,7 @@ function errorHandler(
 
   if (err instanceof Array && err[0] instanceof ValidationError) {
     statusCode = ErrorType.Validation;
-    errorResponse = new ErrorMsg('Validation error', err);
+    errorResponse = new ErrorMsg(createValidationMsg(err), err);
   } else if (err instanceof HttpError) {
     statusCode = err.type;
     errorResponse = new ErrorMsg(err.message);
@@ -29,6 +29,14 @@ function errorHandler(
 
   logger.error(err);
   res.status(statusCode).send(errorResponse);
+}
+
+function createValidationMsg(errors: ValidationError[]): string {
+  const reducer = (msg: string, item: ValidationError): string => {
+    return msg + Object.values(item.constraints).join(', ');
+  };
+
+  return errors.reduce(reducer, '');
 }
 
 export default errorHandler;
