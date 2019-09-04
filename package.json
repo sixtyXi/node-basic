@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc",
     "prod": "node -r dotenv/config dist/app.js",
-    "serve": "run-s build up prod",
     "dev": "nodemon -r dotenv/config src/app.ts",
     "dev:debug": "nodemon -r dotenv/config --inspect-brk src/app.ts",
     "lint": "eslint --cache */**/*.{js,ts}  --ignore-path .gitignore --fix",
