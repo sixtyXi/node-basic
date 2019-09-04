@@ -8,9 +8,10 @@ import photoMapper from '../mapper/photo.mapper';
 import { uploadFile } from '../helpers/uploadFile';
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
+import Controller from '../types/Controller';
 
 @injectable()
-class PhotoController {
+class PhotoController extends Controller {
   public constructor(
     @inject(UserService)
     private userService: UserService,
@@ -18,7 +19,9 @@ class PhotoController {
     private photoService: PhotoService,
     @inject(Validator)
     private validator: Validator
-  ) {}
+  ) {
+    super();
+  }
 
   public addUserPhoto = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

@@ -15,7 +15,10 @@ class UserRouter {
   }
 
   private init(): void {
-    this.router.route('/').post(this.loginController.login);
+    this.router
+      .route('/')
+      .post(this.loginController.login)
+      .all(this.loginController.notAllowed);
   }
 }
 

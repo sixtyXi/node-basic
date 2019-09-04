@@ -21,18 +21,21 @@ class UserRouter {
     this.router
       .route('/')
       .get(this.userController.getUsers)
-      .post(this.userController.addUser);
+      .post(this.userController.addUser)
+      .all(this.userController.notAllowed);
 
     this.router
       .route('/:userId')
       .get(this.userController.getUserById)
       .put(this.userController.updateUser)
-      .delete(this.userController.deleteUser);
+      .delete(this.userController.deleteUser)
+      .all(this.userController.notAllowed);
 
     this.router
       .route('/:userId/photo')
       .get(this.photoController.getUserPhoto)
-      .post(this.photoController.addUserPhoto);
+      .post(this.photoController.addUserPhoto)
+      .all(this.photoController.notAllowed);
   }
 }
 

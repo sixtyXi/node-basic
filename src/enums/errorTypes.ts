@@ -1,7 +1,9 @@
 export enum ErrorType {
-  Application = 500,
-  NotFound = 404,
-  Forbidden = 403,
+  Validation = 400,
   Unauthorized = 401,
-  Validation = 400
+  Forbidden = 403,
+  NotFound = 404,
+  NotAllowed = 405,
+  Teapot = 418,
+  Application = 500
 }

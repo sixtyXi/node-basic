@@ -6,15 +6,18 @@ import groupMapper from '../mapper/group.mapper';
 import Validator from '../validator';
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
+import Controller from '../types/Controller';
 
 @injectable()
-class GroupController {
+class GroupController extends Controller {
   public constructor(
     @inject(GroupService)
     private groupService: GroupService,
     @inject(Validator)
     private validator: Validator
-  ) {}
+  ) {
+    super();
+  }
 
   public getGroups = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

@@ -6,15 +6,18 @@ import userMapper from '../mapper/user.mapper';
 import Validator from '../validator';
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
+import Controller from '../types/Controller';
 
 @injectable()
-class UserController {
+class UserController extends Controller {
   public constructor(
     @inject(UserService)
     private userService: UserService,
     @inject(Validator)
     private validator: Validator
-  ) {}
+  ) {
+    super();
+  }
 
   public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
