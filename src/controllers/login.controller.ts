@@ -5,13 +5,14 @@ import loginMapper from '../mapper/login.mapper';
 import Validator from '../validator';
 import LoginService from '../services/login.service';
 import Controller from '../types/Controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class LoginController extends Controller {
   public constructor(
-    @inject(LoginService)
+    @inject(TYPES.LoginService)
     private loginService: LoginService,
-    @inject(Validator)
+    @inject(TYPES.Validator)
     private validator: Validator
   ) {
     super();

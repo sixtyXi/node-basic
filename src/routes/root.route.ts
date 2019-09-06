@@ -6,15 +6,16 @@ import UserRouter from './user.route';
 import LoginRouter from './login.route';
 import { ErrorType } from '../enums/errorTypes';
 import HttpError from '../types/HttpError';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class RootRouter {
   public router = Router();
 
   public constructor(
-    @inject(UserRouter) userRouter: UserRouter,
-    @inject(GroupRouter) groupRouter: GroupRouter,
-    @inject(LoginRouter) loginRouter: LoginRouter
+    @inject(TYPES.UserRouter) userRouter: UserRouter,
+    @inject(TYPES.GroupRouter) groupRouter: GroupRouter,
+    @inject(TYPES.LoginRouter) loginRouter: LoginRouter
   ) {
     this.router.use('/users', userRouter.router);
     this.router.use('/groups', groupRouter.router);

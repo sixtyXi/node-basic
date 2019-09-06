@@ -7,13 +7,14 @@ import Validator from '../validator';
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class GroupController extends Controller {
   public constructor(
-    @inject(GroupService)
+    @inject(TYPES.GroupService)
     private groupService: GroupService,
-    @inject(Validator)
+    @inject(TYPES.Validator)
     private validator: Validator
   ) {
     super();

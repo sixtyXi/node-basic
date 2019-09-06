@@ -5,11 +5,12 @@ import GroupOrmRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
 import Group from '../models/Domain/group.domain';
 import { catchErrors } from '../helpers/catch';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class GroupService {
   public constructor(
-    @inject(GroupOrmRepository)
+    @inject(TYPES.GroupOrmRepository)
     private groupRepository: GroupOrmRepository
   ) {}
 

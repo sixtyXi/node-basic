@@ -1,18 +1,22 @@
-import { Model, BuildOptions, Sequelize } from 'sequelize';
+import { Model, BuildOptions, Sequelize, ModelCtor } from 'sequelize';
 
+import { USERS as tableName, PHOTOS } from './constants';
 import { UserOrm, dataTypes } from '../models/ORM/user.orm';
-import { PhotoOrmInstance } from './photo.builder';
+import { Associable } from '../types/associable';
 
-const tableName = 'Users';
 const options = { paranoid: true };
 
 export type UserOrmInstance = typeof Model & {
   new (values?: object, options?: BuildOptions): UserOrm;
-};
+} & Associable;
 
-const userOrmBuilder = (seq: Sequelize, photo: PhotoOrmInstance): UserOrmInstance => {
+const userOrmBuilder = (seq: Sequelize): UserOrmInstance => {
   const userOrmInstance = seq.define(tableName, dataTypes, options) as UserOrmInstance;
-  userOrmInstance.hasOne(photo, { sourceKey: 'id', foreignKey: 'userId' });
+
+  userOrmInstance.associate = (models: Record<string, ModelCtor<Model>>): void => {
+    userOrmInstance.hasOne(models[PHOTOS], { sourceKey: 'id', foreignKey: 'userId' });
+  };
+
   return userOrmInstance;
 };
 

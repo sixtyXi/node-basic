@@ -5,11 +5,12 @@ import { Permission } from '../types/permission';
 import { getBitPermission } from '../helpers/getBitPermission';
 import Group from '../models/Domain/group.domain';
 import { catchErrors } from '../helpers/catch';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class UserGroupService {
   public constructor(
-    @inject(UserGroupOrmRepository)
+    @inject(TYPES.UserGroupOrmRepository)
     private userGroupRepository: UserGroupOrmRepository
   ) {}
 

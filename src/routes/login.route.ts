@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { injectable, inject } from 'inversify';
 
 import LoginController from '../controllers/login.controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class UserRouter {
   public router = Router();
 
   public constructor(
-    @inject(LoginController)
+    @inject(TYPES.LoginController)
     private loginController: LoginController
   ) {
     this.init();

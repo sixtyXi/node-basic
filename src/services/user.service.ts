@@ -5,11 +5,12 @@ import UserRequestDTO from '../models/DTO/user.request.dto';
 import userMapper from '../mapper/user.mapper';
 import User from '../models/Domain/user.domain';
 import { catchErrors } from '../helpers/catch';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class UserService {
   public constructor(
-    @inject('UserRepositoryContract')
+    @inject(TYPES.UserRepositoryContract)
     private userRepository: UserRepositoryContract
   ) {}
 

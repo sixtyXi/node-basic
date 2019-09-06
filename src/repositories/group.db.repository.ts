@@ -1,40 +1,41 @@
 import { injectable, inject } from 'inversify';
+import { TYPES } from '../TYPES';
 
-import { DbClientProvider } from '../types/dbClientProvider';
 import Group from '../models/Domain/group.domain';
 import groupMapper from '../mapper/group.mapper';
+import { GROUPS } from '../db/constants';
+import DbClient from '../db/dbClient';
+import { GroupOrmInstance } from '../db/group.builder';
+import { OrmMap } from '../types/ormMap';
 
 @injectable()
 class GroupOrmRepository {
-  public constructor(
-    @inject('DbClientProvider')
-    private dbProvider: DbClientProvider
-  ) {}
+  private models: OrmMap;
+
+  public constructor(@inject(TYPES.DbClient) private db: DbClient) {
+    this.models = db.models;
+  }
 
   public async getGroups(): Promise<Group[]> {
-    const { groupOrm } = await this.dbProvider();
-    const groups = await groupOrm.findAll();
+    const groups = await (this.models[GROUPS] as GroupOrmInstance).findAll();
 
     return groups.map(groupMapper.fromOrm);
   }
 
   public async getGroupById(id: string): Promise<Group | null> {
-    const { groupOrm } = await this.dbProvider();
-    const group = await groupOrm.findByPk(id);
+    const group = await (this.models[GROUPS] as GroupOrmInstance).findByPk(id);
 
     return group && groupMapper.fromOrm(group);
   }
 
   public async addGroup(group: Group): Promise<Group> {
-    const { groupOrm } = await this.dbProvider();
-    const addedGroup = await groupOrm.create(group);
+    const addedGroup = await (this.models[GROUPS] as GroupOrmInstance).create(group);
 
     return groupMapper.fromOrm(addedGroup);
   }
 
   public async updateGroup(group: Group): Promise<Group | null> {
-    const { groupOrm } = await this.dbProvider();
-    const result = await groupOrm.update(group, {
+    const result = await (this.models[GROUPS] as GroupOrmInstance).update(group, {
       where: {
         id: group.id
       },
@@ -47,8 +48,7 @@ class GroupOrmRepository {
   }
 
   public async deleteGroupById(id: string): Promise<number> {
-    const { groupOrm } = await this.dbProvider();
-    return groupOrm.destroy({ where: { id } });
+    return this.models[GROUPS].destroy({ where: { id } });
   }
 }
 

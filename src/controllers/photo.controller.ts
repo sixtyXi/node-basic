@@ -9,15 +9,16 @@ import { uploadFile } from '../helpers/uploadFile';
 import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class PhotoController extends Controller {
   public constructor(
-    @inject(UserService)
+    @inject(TYPES.UserService)
     private userService: UserService,
-    @inject(PhotoService)
+    @inject(TYPES.PhotoService)
     private photoService: PhotoService,
-    @inject(Validator)
+    @inject(TYPES.Validator)
     private validator: Validator
   ) {
     super();

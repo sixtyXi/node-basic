@@ -5,11 +5,12 @@ import Photo from '../models/Domain/photo.domain';
 import photoMapper from '../mapper/photo.mapper';
 import PhotoOrmRepository from '../repositories/photo.db.repository';
 import { catchErrors } from '../helpers/catch';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class PhotoService {
   public constructor(
-    @inject(PhotoOrmRepository)
+    @inject(TYPES.PhotoOrmRepository)
     private photoRepository: PhotoOrmRepository
   ) {}
 

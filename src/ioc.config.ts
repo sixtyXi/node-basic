@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
+import { TYPES } from './TYPES';
 import DbClient from './db/dbClient';
-import { DbClientProvider } from './types/dbClientProvider';
 
 import UserRepositoryContract from './interfaces/UserRepositoryContract';
 import UserOrmRepository from './repositories/user.db.repository';
@@ -32,43 +32,33 @@ import RootRouter from './routes/root.route';
 const container = new Container();
 
 container
-  .bind<DbClient>('DbClient')
+  .bind<DbClient>(TYPES.DbClient)
   .to(DbClient)
   .inSingletonScope();
 
-container.bind<DbClientProvider>('DbClientProvider').toProvider<DbClient>(
-  (context): DbClientProvider => {
-    return async (): Promise<DbClient> => {
-      const dbClient = context.container.get<DbClient>('DbClient');
-      await dbClient.init();
-      return dbClient;
-    };
-  }
-);
+container.bind<UserRepositoryContract>(TYPES.UserRepositoryContract).to(UserOrmRepository);
+container.bind<UserService>(TYPES.UserService).to(UserService);
+container.bind<UserController>(TYPES.UserController).to(UserController);
+container.bind<UserRouter>(TYPES.UserRouter).to(UserRouter);
 
-container.bind<UserRepositoryContract>('UserRepositoryContract').to(UserOrmRepository);
-container.bind(UserService).toSelf();
-container.bind(UserController).toSelf();
-container.bind(UserRouter).toSelf();
+container.bind<GroupOrmRepository>(TYPES.GroupOrmRepository).to(GroupOrmRepository);
+container.bind<GroupService>(TYPES.GroupService).to(GroupService);
+container.bind<GroupController>(TYPES.GroupController).to(GroupController);
+container.bind<GroupRouter>(TYPES.GroupRouter).to(GroupRouter);
 
-container.bind(GroupOrmRepository).toSelf();
-container.bind(GroupService).toSelf();
-container.bind(GroupController).toSelf();
-container.bind(GroupRouter).toSelf();
+container.bind<UserGroupOrmRepository>(TYPES.UserGroupOrmRepository).to(UserGroupOrmRepository);
+container.bind<UserGroupService>(TYPES.UserGroupService).to(UserGroupService);
 
-container.bind(UserGroupOrmRepository).toSelf();
-container.bind(UserGroupService).toSelf();
+container.bind<PhotoOrmRepository>(TYPES.PhotoOrmRepository).to(PhotoOrmRepository);
+container.bind<PhotoService>(TYPES.PhotoService).to(PhotoService);
+container.bind<PhotoController>(TYPES.PhotoController).to(PhotoController);
 
-container.bind(PhotoOrmRepository).toSelf();
-container.bind(PhotoService).toSelf();
-container.bind(PhotoController).toSelf();
+container.bind<LoginService>(TYPES.LoginService).to(LoginService);
+container.bind<LoginController>(TYPES.LoginController).to(LoginController);
+container.bind<LoginRouter>(TYPES.LoginRouter).to(LoginRouter);
 
-container.bind(LoginService).toSelf();
-container.bind(LoginController).toSelf();
-container.bind(LoginRouter).toSelf();
+container.bind<Validator>(TYPES.Validator).to(Validator);
 
-container.bind(Validator).toSelf();
-
-container.bind(RootRouter).toSelf();
+container.bind<RootRouter>(TYPES.RootRouter).to(RootRouter);
 
 export default container;

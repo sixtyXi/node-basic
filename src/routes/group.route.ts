@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { injectable, inject } from 'inversify';
 
 import GroupController from '../controllers/group.controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class GroupRouter {
   public router = Router();
 
   public constructor(
-    @inject(GroupController)
+    @inject(TYPES.GroupController)
     private groupController: GroupController
   ) {
     this.init();

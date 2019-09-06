@@ -1,26 +1,38 @@
 import { injectable, inject } from 'inversify';
 
-import { DbClientProvider } from '../types/dbClientProvider';
 import Photo from '../models/Domain/photo.domain';
 import photoMapper from '../mapper/photo.mapper';
+import { PHOTOS, USERS } from '../db/constants';
+import DbClient from '../db/dbClient';
+import { TYPES } from '../TYPES';
+import { UserOrmInstance } from '../db/user.builder';
+import { PhotoOrmInstance } from '../db/photo.builder';
+import { OrmMap } from '../types/ormMap';
 
 @injectable()
 class PhotoOrmRepository {
+  private models: OrmMap;
+
   public constructor(
-    @inject('DbClientProvider')
-    private dbProvider: DbClientProvider
-  ) {}
+    @inject(TYPES.DbClient)
+    private db: DbClient
+  ) {
+    this.models = db.models;
+  }
 
   public async addUserPhoto(userId: string, photo: Photo): Promise<Photo | null> {
-    const { userOrm, photoOrm, sequelize } = await this.dbProvider();
-
-    return sequelize.transaction(
+    return this.db.sequelize.transaction(
       async (transaction): Promise<Photo | null> => {
-        const user = await userOrm.findOne({ where: { id: userId }, transaction });
+        const user = await (this.models[USERS] as UserOrmInstance).findOne({
+          where: { id: userId },
+          transaction
+        });
         let addedPhoto = null;
 
         if (user) {
-          addedPhoto = await photoOrm.create(photo, { transaction });
+          addedPhoto = await (this.models[PHOTOS] as PhotoOrmInstance).create(photo, {
+            transaction
+          });
           await user.setPhoto(addedPhoto, { transaction });
         }
 
@@ -30,8 +42,7 @@ class PhotoOrmRepository {
   }
 
   public async getUserPhoto(userId: string): Promise<Photo | null> {
-    const { userOrm } = await this.dbProvider();
-    const user = await userOrm.findOne({ where: { id: userId } });
+    const user = await (this.models[USERS] as UserOrmInstance).findOne({ where: { id: userId } });
     let photo = null;
 
     if (user) {

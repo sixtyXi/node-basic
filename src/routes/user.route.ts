@@ -3,15 +3,16 @@ import { injectable, inject } from 'inversify';
 
 import UserController from '../controllers/user.controller';
 import PhotoController from '../controllers/photo.controller';
+import { TYPES } from '../TYPES';
 
 @injectable()
 class UserRouter {
   public router = Router();
 
   public constructor(
-    @inject(UserController)
+    @inject(TYPES.UserController)
     private userController: UserController,
-    @inject(PhotoController)
+    @inject(TYPES.PhotoController)
     private photoController: PhotoController
   ) {
     this.init();

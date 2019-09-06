@@ -2,26 +2,29 @@ import { injectable, inject } from 'inversify';
 
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
 import User from '../models/Domain/user.domain';
-import { DbClientProvider } from '../types/dbClientProvider';
 import userMapper from '../mapper/user.mapper';
+import DbClient from '../db/dbClient';
+import { USERS } from '../db/constants';
+import { TYPES } from '../TYPES';
+import { UserOrmInstance } from '../db/user.builder';
+import { OrmMap } from '../types/ormMap';
 
 @injectable()
 class UserOrmRepository implements UserRepositoryContract {
-  public constructor(
-    @inject('DbClientProvider')
-    private dbProvider: DbClientProvider
-  ) {}
+  private models: OrmMap;
+
+  public constructor(@inject(TYPES.DbClient) private db: DbClient) {
+    this.models = db.models;
+  }
 
   public async getUsers(): Promise<User[]> {
-    const { userOrm } = await this.dbProvider();
-    const users = await userOrm.findAll();
+    const users = await (this.models[USERS] as UserOrmInstance).findAll();
 
     return users.map(userMapper.fromOrm);
   }
 
   public async getUserById(id: string): Promise<User | null> {
-    const { userOrm } = await this.dbProvider();
-    const user = await userOrm.findOne({
+    const user = await (this.models[USERS] as UserOrmInstance).findOne({
       where: { id }
     });
 
@@ -29,15 +32,13 @@ class UserOrmRepository implements UserRepositoryContract {
   }
 
   public async addUser(user: User): Promise<User> {
-    const { userOrm } = await this.dbProvider();
-    const addedUser = await userOrm.create(user);
+    const addedUser = await (this.models[USERS] as UserOrmInstance).create(user);
 
     return userMapper.fromOrm(addedUser);
   }
 
   public async updateUser(user: User): Promise<User | null> {
-    const { userOrm } = await this.dbProvider();
-    const result = await userOrm.update(user, {
+    const result = await (this.models[USERS] as UserOrmInstance).update(user, {
       where: {
         id: user.id
       },
@@ -50,8 +51,7 @@ class UserOrmRepository implements UserRepositoryContract {
   }
 
   public async deleteUserById(id: string): Promise<number> {
-    const { userOrm } = await this.dbProvider();
-    return userOrm.destroy({ where: { id } });
+    return this.models[USERS].destroy({ where: { id } });
   }
 }
 
