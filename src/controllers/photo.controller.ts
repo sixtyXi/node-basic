@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { injectable, inject } from 'inversify';
 
 import UserService from '../services/user.service';
@@ -10,6 +10,7 @@ import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
+import { handleErrors } from '../helpers/handleErrors';
 
 @injectable()
 class PhotoController extends Controller {
@@ -24,43 +25,37 @@ class PhotoController extends Controller {
     super();
   }
 
-  public addUserPhoto = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = req.params.userId;
-      await this.validator.validateId(id);
-      await this.userService.getUserById(id);
+  @handleErrors()
+  public addUserPhoto = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.userId;
+    await this.validator.validateId(id);
+    await this.userService.getUserById(id);
 
-      const {
-        files: { photo }
-      } = await uploadFile(req);
+    const {
+      files: { photo }
+    } = await uploadFile(req);
 
-      const uploadedPhoto = photoMapper.fromRequest(photo);
-      const addedPhoto = await this.photoService.addUserPhoto(id, uploadedPhoto);
+    const uploadedPhoto = photoMapper.fromRequest(photo);
+    const addedPhoto = await this.photoService.addUserPhoto(id, uploadedPhoto);
 
-      if (addedPhoto) {
-        res.json(addedPhoto);
-      } else {
-        throw new CustomError(ErrorType.NotFound, this.addUserPhoto.name, { id });
-      }
-    } catch (error) {
-      next(error);
+    if (addedPhoto) {
+      res.json(addedPhoto);
+    } else {
+      throw new CustomError(ErrorType.NotFound, this.addUserPhoto.name, { id });
     }
   };
 
-  public getUserPhoto = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const id = req.params.userId;
-      await this.validator.validateId(id);
-      const photo = await this.photoService.getUserPhoto(id);
+  @handleErrors()
+  public getUserPhoto = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.userId;
+    await this.validator.validateId(id);
+    const photo = await this.photoService.getUserPhoto(id);
 
-      if (photo) {
-        res.set('Content-Type', photo.type);
-        res.sendFile(photo.path);
-      } else {
-        throw new CustomError(ErrorType.NotFound, this.getUserPhoto.name, { id });
-      }
-    } catch (error) {
-      next(error);
+    if (photo) {
+      res.set('Content-Type', photo.type);
+      res.sendFile(photo.path);
+    } else {
+      throw new CustomError(ErrorType.NotFound, this.getUserPhoto.name, { id });
     }
   };
 }
