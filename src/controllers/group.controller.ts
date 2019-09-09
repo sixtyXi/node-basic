@@ -8,7 +8,7 @@ import CustomError from '../types/CustomError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
-import { handleErrors } from '../helpers/handleErrors';
+import { handleErrors } from '../helpers/decorators/handleErrors';
 
 @injectable()
 class GroupController extends Controller {

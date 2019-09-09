@@ -4,7 +4,7 @@ import UserRepositoryContract from '../interfaces/UserRepositoryContract';
 import UserRequestDTO from '../models/DTO/user.request.dto';
 import userMapper from '../mapper/user.mapper';
 import User from '../models/Domain/user.domain';
-import { catchErrors } from '../helpers/catchErrors';
+import { catchErrors } from '../helpers/decorators/catchErrors';
 import { TYPES } from '../TYPES';
 
 @injectable()

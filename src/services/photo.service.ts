@@ -4,7 +4,7 @@ import PhotoDTO from '../models/DTO/photo.dto';
 import Photo from '../models/Domain/photo.domain';
 import photoMapper from '../mapper/photo.mapper';
 import PhotoOrmRepository from '../repositories/photo.db.repository';
-import { catchErrors } from '../helpers/catchErrors';
+import { catchErrors } from '../helpers/decorators/catchErrors';
 import { TYPES } from '../TYPES';
 
 @injectable()

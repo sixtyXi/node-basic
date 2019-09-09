@@ -6,7 +6,7 @@ import Validator from '../validator';
 import LoginService from '../services/login.service';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
-import { handleErrors } from '../helpers/handleErrors';
+import { handleErrors } from '../helpers/decorators/handleErrors';
 
 @injectable()
 class LoginController extends Controller {

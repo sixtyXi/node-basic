@@ -4,7 +4,7 @@ import UserGroupOrmRepository from '../repositories/userGroup.db.repository';
 import { Permission } from '../types/permission';
 import { getBitPermission } from '../helpers/getBitPermission';
 import Group from '../models/Domain/group.domain';
-import { catchErrors } from '../helpers/catchErrors';
+import { catchErrors } from '../helpers/decorators/catchErrors';
 import { TYPES } from '../TYPES';
 
 @injectable()
