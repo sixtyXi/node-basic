@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 
 import LoginDTO from '../models/DTO/login.dto';
-import { catchErrors } from '../helpers/catch';
+import { catchErrors } from '../helpers/catchErrors';
 
 @injectable()
 class LoginService {

@@ -4,7 +4,7 @@ import GroupDTO from '../models/DTO/group.dto';
 import GroupOrmRepository from '../repositories/group.db.repository';
 import groupMapper from '../mapper/group.mapper';
 import Group from '../models/Domain/group.domain';
-import { catchErrors } from '../helpers/catch';
+import { catchErrors } from '../helpers/catchErrors';
 import { TYPES } from '../TYPES';
 
 @injectable()
