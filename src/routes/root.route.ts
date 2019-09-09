@@ -21,7 +21,7 @@ class RootRouter {
     this.router.use('/groups', groupRouter.router);
     this.router.use('/login', loginRouter.router);
     this.router.route('*').all((req, res, next): void => {
-      next(new HttpError(ErrorType.Teapot, 'Not implemented'));
+      next(new HttpError(ErrorType.NotFound, 'Not implemented'));
     });
   }
 }

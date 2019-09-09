@@ -87,7 +87,7 @@ class GroupController extends Controller {
       const deletedGroupsQty = await this.groupService.deleteGroupById(id);
 
       if (deletedGroupsQty) {
-        res.status(200).end();
+        res.status(204).end();
       } else {
         throw new CustomError(ErrorType.NotFound, this.deleteGroup.name, { id });
       }

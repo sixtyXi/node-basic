@@ -97,7 +97,7 @@ class UserController extends Controller {
       const deletedUsersQty = await this.userService.deleteUserById(id);
 
       if (deletedUsersQty) {
-        res.status(200).end();
+        res.status(204).end();
       } else {
         throw new CustomError(ErrorType.NotFound, this.deleteUser.name, { id });
       }
