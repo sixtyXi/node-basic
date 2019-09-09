@@ -2,7 +2,7 @@
 import { ErrorType } from '../enums/errorTypes';
 import HttpError from './HttpError';
 
-class CustomError extends HttpError {
+class ApplicationError extends HttpError {
   public constructor(
     type: ErrorType,
     public methodName: string,
@@ -10,8 +10,8 @@ class CustomError extends HttpError {
     ...params: any[]
   ) {
     super(type, ...params);
-    HttpError.captureStackTrace(this, CustomError);
+    HttpError.captureStackTrace(this, ApplicationError);
   }
 }
 
-export default CustomError;
+export default ApplicationError;

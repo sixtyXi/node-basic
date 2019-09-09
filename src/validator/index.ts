@@ -4,7 +4,7 @@ import { injectable } from 'inversify';
 import UserRequestDTO from '../models/DTO/user.request.dto';
 import LoginDTO from '../models/DTO/login.dto';
 import GroupDTO from '../models/DTO/group.dto';
-import CustomError from '../types/CustomError';
+import ApplicationError from '../types/ApplicationError';
 import { ErrorType } from '../enums/errorTypes';
 
 @injectable()
@@ -15,7 +15,7 @@ class Validator {
 
   public async validateId(id: string): Promise<void> {
     if (!this.validator.isUUID(id)) {
-      throw new CustomError(
+      throw new ApplicationError(
         ErrorType.Validation,
         this.validateId.name,
         { id },

@@ -6,7 +6,7 @@ import PhotoService from '../services/photo.service';
 import Validator from '../validator';
 import photoMapper from '../mapper/photo.mapper';
 import { uploadFile } from '../helpers/uploadFile';
-import CustomError from '../types/CustomError';
+import ApplicationError from '../types/ApplicationError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
@@ -41,7 +41,7 @@ class PhotoController extends Controller {
     if (addedPhoto) {
       res.json(addedPhoto);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.addUserPhoto.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.addUserPhoto.name, { id });
     }
   };
 
@@ -55,7 +55,7 @@ class PhotoController extends Controller {
       res.set('Content-Type', photo.type);
       res.sendFile(photo.path);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.getUserPhoto.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.getUserPhoto.name, { id });
     }
   };
 }

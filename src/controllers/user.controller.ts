@@ -4,7 +4,7 @@ import { injectable, inject } from 'inversify';
 import UserService from '../services/user.service';
 import userMapper from '../mapper/user.mapper';
 import Validator from '../validator';
-import CustomError from '../types/CustomError';
+import ApplicationError from '../types/ApplicationError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
@@ -39,7 +39,7 @@ class UserController extends Controller {
       const userDto = userMapper.toResponse(user);
       res.json(userDto);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.getUserById.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.getUserById.name, { id });
     }
   };
 
@@ -70,7 +70,7 @@ class UserController extends Controller {
       const updatedUserDto = userMapper.toResponse(updatedUser);
       res.json(updatedUserDto);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.updateUser.name, {
+      throw new ApplicationError(ErrorType.NotFound, this.updateUser.name, {
         id,
         login,
         password,
@@ -88,7 +88,7 @@ class UserController extends Controller {
     if (deletedUsersQty) {
       res.status(204).end();
     } else {
-      throw new CustomError(ErrorType.NotFound, this.deleteUser.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.deleteUser.name, { id });
     }
   };
 }

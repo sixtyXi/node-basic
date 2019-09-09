@@ -4,7 +4,7 @@ import { injectable, inject } from 'inversify';
 import GroupService from '../services/group.service';
 import groupMapper from '../mapper/group.mapper';
 import Validator from '../validator';
-import CustomError from '../types/CustomError';
+import ApplicationError from '../types/ApplicationError';
 import { ErrorType } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
@@ -39,7 +39,7 @@ class GroupController extends Controller {
       const groupDto = groupMapper.toDTO(group);
       res.json(groupDto);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.getGroupById.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.getGroupById.name, { id });
     }
   };
 
@@ -65,7 +65,7 @@ class GroupController extends Controller {
       const updatedGroupDto = groupMapper.toDTO(updatedGroup);
       res.json(updatedGroupDto);
     } else {
-      throw new CustomError(ErrorType.NotFound, this.updateGroup.name, { id, name, permissions });
+      throw new ApplicationError(ErrorType.NotFound, this.updateGroup.name, { id, name, permissions });
     }
   };
 
@@ -78,7 +78,7 @@ class GroupController extends Controller {
     if (deletedGroupsQty) {
       res.status(204).end();
     } else {
-      throw new CustomError(ErrorType.NotFound, this.deleteGroup.name, { id });
+      throw new ApplicationError(ErrorType.NotFound, this.deleteGroup.name, { id });
     }
   };
 }

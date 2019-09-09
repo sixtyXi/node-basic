@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import CustomError from '../../types/CustomError';
+import ApplicationError from '../../types/ApplicationError';
 import { ErrorType } from '../../enums/errorTypes';
 
 export function catchErrors(errorType: ErrorType = ErrorType.Application): Function {
@@ -14,10 +14,10 @@ export function catchErrors(errorType: ErrorType = ErrorType.Application): Funct
         const result = await originalMethod.apply(this, args);
         return result;
       } catch (error) {
-        if (error instanceof CustomError) {
+        if (error instanceof ApplicationError) {
           throw error;
         }
-        throw new CustomError(errorType, propertyKey, args);
+        throw new ApplicationError(errorType, propertyKey, args);
       }
     };
 

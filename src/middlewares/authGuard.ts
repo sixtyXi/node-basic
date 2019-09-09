@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import CustomError from '../types/CustomError';
+import ApplicationError from '../types/ApplicationError';
 import { ErrorType } from '../enums/errorTypes';
 
 // eslint-disable-next-line consistent-return
@@ -17,11 +17,11 @@ function authGuard(req: Request, res: Response, next: NextFunction): void {
 
     jwt.verify(token, secret, (err: Error): void => {
       if (err) {
-        next(new CustomError(ErrorType.Forbidden, authGuard.name, { token }, err.message));
+        next(new ApplicationError(ErrorType.Forbidden, authGuard.name, { token }, err.message));
       } else next();
     });
   } else {
-    next(new CustomError(ErrorType.Unauthorized, authGuard.name, { token }));
+    next(new ApplicationError(ErrorType.Unauthorized, authGuard.name, { token }));
   }
 }
 

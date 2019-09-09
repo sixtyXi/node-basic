@@ -5,9 +5,9 @@
   "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
-    "prod": "node -r dotenv/config dist/app.js",
-    "dev": "nodemon -r dotenv/config src/app.ts",
-    "dev:debug": "nodemon -r dotenv/config --inspect-brk src/app.ts",
+    "prod": "node -r dotenv/config dist/app.js NODE_ENV=production",
+    "dev": "nodemon -r dotenv/config src/app.ts NODE_ENV=development",
+    "dev:debug": "nodemon -r dotenv/config --inspect-brk src/app.ts NODE_ENV=development",
     "lint": "eslint --cache */**/*.{js,ts}  --ignore-path .gitignore --fix",
     "up": "docker-compose up",
     "down": "docker-compose down",

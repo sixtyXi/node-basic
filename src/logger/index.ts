@@ -16,7 +16,7 @@ const errorLog = path.join(outputDir, 'error.log');
 const infoLog = path.join(outputDir, 'info.log');
 
 export const logger = winston.createLogger({
-  format: combine(timestamp(), customFormat),
+  format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), customFormat),
   transports: [
     new winston.transports.File({ filename: errorLog, level: 'error' }),
     new winston.transports.File({ filename: infoLog, level: 'info' }),

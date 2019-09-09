@@ -7,12 +7,15 @@ import DbClient from './db/dbClient';
 import errorHandler from './middlewares/errorHandler';
 import timing from './middlewares/timing';
 import authGuard from './middlewares/authGuard';
-import { logger } from './logger';
+import { handleProcessError } from './helpers/handleProcessError';
 
-process.on('uncaughtException', (error: Error): void => {
-  logger.log('error', `${new Date().toUTCString()} uncaughtException: ${error.message}`);
-  process.exit(1);
-});
+process
+  .addListener('uncaughtException', (error: Error): void => {
+    handleProcessError(`uncaughtException: ${error.message}`);
+  })
+  .addListener('unhandledRejection', (reason): void => {
+    handleProcessError(`unhandledRejection: ${reason}`);
+  });
 
 const { router } = container.get<RootRouter>(TYPES.RootRouter);
 const app: Application = express();
