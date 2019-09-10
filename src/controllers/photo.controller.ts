@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { injectable, inject } from 'inversify';
 
 import UserService from '../services/user.service';
@@ -7,10 +7,11 @@ import Validator from '../validator';
 import photoMapper from '../mapper/photo.mapper';
 import { uploadFile } from '../helpers/uploadFile';
 import ApplicationError from '../types/ApplicationError';
-import { ErrorType } from '../enums/errorTypes';
+import { ErrorStatus } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
 import { handleErrors } from '../helpers/decorators/handleErrors';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
 @injectable()
 class PhotoController extends Controller {
@@ -26,7 +27,7 @@ class PhotoController extends Controller {
   }
 
   @handleErrors()
-  public addUserPhoto = async (req: Request, res: Response): Promise<void> => {
+  public addUserPhoto = async (req: AuthRequest, res: Response): Promise<void> => {
     const id = req.params.userId;
     await this.validator.validateId(id);
     await this.userService.getUserById(id);
@@ -41,12 +42,12 @@ class PhotoController extends Controller {
     if (addedPhoto) {
       res.json(addedPhoto);
     } else {
-      throw new ApplicationError(ErrorType.NotFound, this.addUserPhoto.name, { id });
+      throw new ApplicationError(ErrorStatus.NotFound, this.addUserPhoto.name, { id });
     }
   };
 
   @handleErrors()
-  public getUserPhoto = async (req: Request, res: Response): Promise<void> => {
+  public getUserPhoto = async (req: AuthRequest, res: Response): Promise<void> => {
     const id = req.params.userId;
     await this.validator.validateId(id);
     const photo = await this.photoService.getUserPhoto(id);
@@ -55,7 +56,7 @@ class PhotoController extends Controller {
       res.set('Content-Type', photo.type);
       res.sendFile(photo.path);
     } else {
-      throw new ApplicationError(ErrorType.NotFound, this.getUserPhoto.name, { id });
+      throw new ApplicationError(ErrorStatus.NotFound, this.getUserPhoto.name, { id });
     }
   };
 }

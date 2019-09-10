@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { injectable, inject } from 'inversify';
 
 import loginMapper from '../mapper/login.mapper';
@@ -7,6 +7,7 @@ import LoginService from '../services/login.service';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
 import { handleErrors } from '../helpers/decorators/handleErrors';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
 @injectable()
 class LoginController extends Controller {
@@ -20,10 +21,10 @@ class LoginController extends Controller {
   }
 
   @handleErrors()
-  public login = async (req: Request, res: Response): Promise<void> => {
+  public login = async (req: AuthRequest, res: Response): Promise<void> => {
     const login = loginMapper.fromRequest(req.body);
     await this.validator.validateDto(login);
-    const token = await LoginService.getToken(login);
+    const token = await this.loginService.getToken(login);
 
     res.json({ token });
   };

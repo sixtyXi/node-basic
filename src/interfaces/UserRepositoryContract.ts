@@ -1,4 +1,5 @@
 import User from '../models/Domain/user.domain';
+import LoginDTO from '../models/DTO/login.dto';
 
 export default interface UserRepositoryContract {
   getUsers(): Promise<User[]>;
@@ -10,4 +11,6 @@ export default interface UserRepositoryContract {
   updateUser(user: User): Promise<User | null>;
 
   deleteUserById(id: string): Promise<number>;
+
+  getUserToLogin(login: LoginDTO): Promise<User | null>;
 }

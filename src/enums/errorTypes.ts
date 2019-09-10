@@ -1,4 +1,4 @@
-export enum ErrorType {
+export enum ErrorStatus {
   Validation = 400,
   Unauthorized = 401,
   Forbidden = 403,

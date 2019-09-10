@@ -3,6 +3,7 @@ import { injectable } from 'inversify';
 import User from '../models/Domain/user.domain';
 import UserRepositoryContract from '../interfaces/UserRepositoryContract';
 import { USERS } from '../mocks/users';
+import LoginDTO from '../models/DTO/login.dto';
 
 @injectable()
 class UserMemoryRepository implements UserRepositoryContract {
@@ -50,6 +51,16 @@ class UserMemoryRepository implements UserRepositoryContract {
     }
 
     return userToDelete ? 1 : 0;
+  }
+
+  public async getUserToLogin(loginDto: LoginDTO): Promise<User | null> {
+    const { name, password } = loginDto;
+
+    const foundUser = this.users.find(
+      (user): boolean => user.login === name && user.password === password && !user.isDeleted
+    );
+
+    return foundUser || null;
   }
 }
 

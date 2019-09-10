@@ -1,8 +1,8 @@
-import { Request } from 'express';
 import formidable, { Fields, Files } from 'formidable';
 import path from 'path';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
-export const uploadFile = (req: Request): Promise<{ fields: Fields; files: Files }> => {
+export const uploadFile = (req: AuthRequest): Promise<{ fields: Fields; files: Files }> => {
   const form = new formidable.IncomingForm();
 
   form.uploadDir = path.resolve(__dirname, '../../uploads');

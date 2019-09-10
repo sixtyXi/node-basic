@@ -4,7 +4,7 @@ import { injectable, inject } from 'inversify';
 import GroupRouter from './group.route';
 import UserRouter from './user.route';
 import LoginRouter from './login.route';
-import { ErrorType } from '../enums/errorTypes';
+import { ErrorStatus } from '../enums/errorTypes';
 import HttpError from '../types/HttpError';
 import { TYPES } from '../TYPES';
 
@@ -21,7 +21,7 @@ class RootRouter {
     this.router.use('/groups', groupRouter.router);
     this.router.use('/login', loginRouter.router);
     this.router.route('*').all((req, res, next): void => {
-      next(new HttpError(ErrorType.NotFound, 'Not implemented'));
+      next(new HttpError(ErrorStatus.NotFound, 'Not implemented'));
     });
   }
 }

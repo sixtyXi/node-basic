@@ -1,19 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { injectable } from 'inversify';
 
 import HttpError from './HttpError';
-import { ErrorType } from '../enums/errorTypes';
+import { ErrorStatus } from '../enums/errorTypes';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
 @injectable()
 abstract class Controller {
-  public notAllowed = (req: Request, res: Response, next: NextFunction): void => {
+  public notAllowed = (req: AuthRequest, res: Response, next: NextFunction): void => {
     const { methods } = req.route;
 
     const allowedMethods = Object.keys(methods)
       .filter((name): boolean => !name.startsWith('_'))
       .map((name): string => name.toUpperCase());
 
-    next(new HttpError(ErrorType.NotAllowed, `Allowed: ${allowedMethods.join(',')}`));
+    next(new HttpError(ErrorStatus.NotAllowed, `Allowed: ${allowedMethods.join(',')}`));
   };
 }
 

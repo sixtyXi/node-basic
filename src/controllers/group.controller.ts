@@ -1,14 +1,15 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { injectable, inject } from 'inversify';
 
 import GroupService from '../services/group.service';
 import groupMapper from '../mapper/group.mapper';
 import Validator from '../validator';
 import ApplicationError from '../types/ApplicationError';
-import { ErrorType } from '../enums/errorTypes';
+import { ErrorStatus } from '../enums/errorTypes';
 import Controller from '../types/Controller';
 import { TYPES } from '../TYPES';
 import { handleErrors } from '../helpers/decorators/handleErrors';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
 @injectable()
 class GroupController extends Controller {
@@ -22,7 +23,7 @@ class GroupController extends Controller {
   }
 
   @handleErrors()
-  public getGroups = async (req: Request, res: Response): Promise<void> => {
+  public getGroups = async (req: AuthRequest, res: Response): Promise<void> => {
     const groups = await this.groupService.getGroups();
     const groupDtos = groups.map(groupMapper.toDTO);
 
@@ -30,7 +31,7 @@ class GroupController extends Controller {
   };
 
   @handleErrors()
-  public getGroupById = async (req: Request, res: Response): Promise<void> => {
+  public getGroupById = async (req: AuthRequest, res: Response): Promise<void> => {
     const id = req.params.groupId;
     await this.validator.validateId(id);
     const group = await this.groupService.getGroupById(id);
@@ -39,12 +40,12 @@ class GroupController extends Controller {
       const groupDto = groupMapper.toDTO(group);
       res.json(groupDto);
     } else {
-      throw new ApplicationError(ErrorType.NotFound, this.getGroupById.name, { id });
+      throw new ApplicationError(ErrorStatus.NotFound, this.getGroupById.name, { id });
     }
   };
 
   @handleErrors()
-  public addGroup = async (req: Request, res: Response): Promise<void> => {
+  public addGroup = async (req: AuthRequest, res: Response): Promise<void> => {
     const group = groupMapper.toDTO(req.body);
     await this.validator.validateDto(group);
     const addedGroup = await this.groupService.addGroup(group);
@@ -54,7 +55,7 @@ class GroupController extends Controller {
   };
 
   @handleErrors()
-  public updateGroup = async (req: Request, res: Response): Promise<void> => {
+  public updateGroup = async (req: AuthRequest, res: Response): Promise<void> => {
     const { name, permissions } = req.body;
     const id = req.params.groupId;
     const group = groupMapper.toDTO({ id, name, permissions });
@@ -65,12 +66,16 @@ class GroupController extends Controller {
       const updatedGroupDto = groupMapper.toDTO(updatedGroup);
       res.json(updatedGroupDto);
     } else {
-      throw new ApplicationError(ErrorType.NotFound, this.updateGroup.name, { id, name, permissions });
+      throw new ApplicationError(ErrorStatus.NotFound, this.updateGroup.name, {
+        id,
+        name,
+        permissions
+      });
     }
   };
 
   @handleErrors()
-  public deleteGroup = async (req: Request, res: Response): Promise<void> => {
+  public deleteGroup = async (req: AuthRequest, res: Response): Promise<void> => {
     const id = req.params.groupId;
     await this.validator.validateId(id);
     const deletedGroupsQty = await this.groupService.deleteGroupById(id);
@@ -78,7 +83,7 @@ class GroupController extends Controller {
     if (deletedGroupsQty) {
       res.status(204).end();
     } else {
-      throw new ApplicationError(ErrorType.NotFound, this.deleteGroup.name, { id });
+      throw new ApplicationError(ErrorStatus.NotFound, this.deleteGroup.name, { id });
     }
   };
 }

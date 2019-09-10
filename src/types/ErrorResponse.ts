@@ -1,4 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default class ErrorResponse {
-  public constructor(public message: string = '', public details: any = '') {}
+  public message: string;
+
+  public details: Error;
+
+  public constructor(err: Error) {
+    this.message = err.message || 'Application error';
+    this.details = err;
+  }
 }

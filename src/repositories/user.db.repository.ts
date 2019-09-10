@@ -8,6 +8,7 @@ import { USERS } from '../db/constants';
 import { TYPES } from '../TYPES';
 import { UserOrmInstance } from '../db/user.builder';
 import { OrmMap } from '../types/ormMap';
+import LoginDTO from '../models/DTO/login.dto';
 
 @injectable()
 class UserOrmRepository implements UserRepositoryContract {
@@ -26,6 +27,15 @@ class UserOrmRepository implements UserRepositoryContract {
   public async getUserById(id: string): Promise<User | null> {
     const user = await (this.models[USERS] as UserOrmInstance).findOne({
       where: { id }
+    });
+
+    return user && userMapper.fromOrm(user);
+  }
+
+  public async getUserToLogin(loginDto: LoginDTO): Promise<User | null> {
+    const { name: login, password } = loginDto;
+    const user = await (this.models[USERS] as UserOrmInstance).findOne({
+      where: { password, login }
     });
 
     return user && userMapper.fromOrm(user);

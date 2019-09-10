@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 
 import { performance } from 'perf_hooks';
 import { logger } from '../logger';
+import { AuthRequest } from '../interfaces/AuthRequest';
 
-function timing(req: Request, res: Response, next: NextFunction): void {
+function timing(req: AuthRequest, res: Response, next: NextFunction): void {
   const startTime = performance.now();
   const { end } = res;
 

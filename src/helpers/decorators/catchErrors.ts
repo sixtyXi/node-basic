@@ -3,9 +3,10 @@
 /* eslint-disable func-names */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import ApplicationError from '../../types/ApplicationError';
-import { ErrorType } from '../../enums/errorTypes';
+import { ErrorStatus } from '../../enums/errorTypes';
+import HttpError from '../../types/HttpError';
 
-export function catchErrors(errorType: ErrorType = ErrorType.Application): Function {
+export function catchErrors(errorType: ErrorStatus = ErrorStatus.Application): Function {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
@@ -14,7 +15,7 @@ export function catchErrors(errorType: ErrorType = ErrorType.Application): Funct
         const result = await originalMethod.apply(this, args);
         return result;
       } catch (error) {
-        if (error instanceof ApplicationError) {
+        if (error instanceof HttpError) {
           throw error;
         }
         throw new ApplicationError(errorType, propertyKey, args);
