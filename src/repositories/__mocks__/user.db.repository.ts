@@ -9,7 +9,8 @@ const mock = jest.fn(
       getUserById: jest.fn(async (): Promise<User> => USERS[0]),
       addUser: jest.fn(async (user): Promise<User> => user),
       updateUser: jest.fn(async (user): Promise<User> => user),
-      deleteUserById: jest.fn()
+      deleteUserById: jest.fn(),
+      getUserToLogin: jest.fn()
     };
   }
 );

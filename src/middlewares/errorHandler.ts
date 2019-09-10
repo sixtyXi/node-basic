@@ -9,8 +9,13 @@ import HttpError from '../types/HttpError';
 import { AuthRequest } from '../interfaces/AuthRequest';
 import ApplicationError from '../types/ApplicationError';
 
-function errorHandler(err: HttpError, req: AuthRequest, res: Response, next: NextFunction): void {
-  const statusCode = err.status || ErrorStatus.Application;
+function errorHandler(
+  err: HttpError | Error,
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): void {
+  const statusCode = err instanceof HttpError ? err.status : ErrorStatus.Application;
   let errorResponse = {};
 
   if (process.env.NODE_ENV === 'development' || statusCode === ErrorStatus.Validation) {
