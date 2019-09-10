@@ -1,10 +1,10 @@
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-import ApplicationError from '../types/ApplicationError';
 import { ErrorStatus } from '../enums/errorTypes';
 import LoginDTO from '../models/DTO/login.dto';
 import { AuthRequest } from '../interfaces/AuthRequest';
+import HttpError from '../types/HttpError';
 
 // eslint-disable-next-line consistent-return
 function authGuard(req: AuthRequest, res: Response, next: NextFunction): void {
@@ -19,7 +19,7 @@ function authGuard(req: AuthRequest, res: Response, next: NextFunction): void {
 
     jwt.verify(token, secret, (err: Error): void => {
       if (err) {
-        next(new ApplicationError(ErrorStatus.Forbidden, authGuard.name, { token }, err.message));
+        next(new HttpError(ErrorStatus.Forbidden, err.message));
       } else {
         const { name, password } = jwt.decode(token) as LoginDTO;
         req.userName = name;
@@ -28,7 +28,7 @@ function authGuard(req: AuthRequest, res: Response, next: NextFunction): void {
       }
     });
   } else {
-    next(new ApplicationError(ErrorStatus.Unauthorized, authGuard.name, { token }));
+    next(new HttpError(ErrorStatus.Unauthorized, 'jwt is missed'));
   }
 }
 

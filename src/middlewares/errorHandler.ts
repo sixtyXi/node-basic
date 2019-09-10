@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint no-unused-vars: off */
 /* eslint @typescript-eslint/no-unused-vars: off */
 import { Response, NextFunction } from 'express';
@@ -8,6 +7,7 @@ import { logger } from '../logger';
 import ErrorResponse from '../types/ErrorResponse';
 import HttpError from '../types/HttpError';
 import { AuthRequest } from '../interfaces/AuthRequest';
+import ApplicationError from '../types/ApplicationError';
 
 function errorHandler(err: HttpError, req: AuthRequest, res: Response, next: NextFunction): void {
   const statusCode = err.status || ErrorStatus.Application;
@@ -17,7 +17,9 @@ function errorHandler(err: HttpError, req: AuthRequest, res: Response, next: Nex
     errorResponse = new ErrorResponse(err);
   }
 
-  logger.error(err);
+  if (err instanceof ApplicationError) {
+    logger.error(err);
+  }
   res.status(statusCode).send(errorResponse);
 }
 
