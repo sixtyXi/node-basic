@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "0d8b05aa-bec3-4fe3-9a72-c86189dd296b",
-    "name": "Groups",
+    "_postman_id": "bafe6e00-02b7-49a0-89ac-eda6b122438c",
+    "name": "Users",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -22,6 +22,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "foo",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [
           {
@@ -33,7 +43,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"John\",\n    \"password\": \"1234\"\n}"
+          "raw": "{\n    \"name\": \"Vovchik\",\n    \"password\": \"789\"\n}"
         },
         "url": {
           "raw": "http://localhost:3000/login",
@@ -46,16 +56,16 @@
       "response": []
     },
     {
-      "name": "Get groups",
+      "name": "Get users",
       "event": [
         {
           "listen": "test",
           "script": {
-            "id": "2a7f3456-70a3-4046-971a-36404890db1f",
+            "id": "655783f2-6201-42f9-abcb-7d65728e3a39",
             "exec": [
               "const response = pm.response.json();",
               "",
-              "pm.globals.set(\"groupId\", response[0].id);"
+              "pm.globals.set(\"userId\", response[0].id);"
             ],
             "type": "text/javascript"
           }
@@ -71,51 +81,52 @@
           }
         ],
         "url": {
-          "raw": "http://localhost:3000/groups",
+          "raw": "http://localhost:3000/users",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["groups"]
+          "path": ["users"]
         }
       },
       "response": []
     },
     {
-      "name": "Get group by ID",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
+      "name": "Get user by ID",
       "request": {
         "method": "GET",
         "header": [
-          {
-            "key": "Content-Type",
-            "name": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          },
           {
             "key": "Authorization",
             "value": "{{token}}",
             "type": "text"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": ""
-        },
         "url": {
-          "raw": "http://localhost:3000/groups/{{groupId}}",
+          "raw": "http://localhost:3000/users/{{userId}}",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["groups", "{{groupId}}"]
+          "path": ["users", "{{userId}}"]
         }
       },
       "response": []
     },
     {
-      "name": "Add group",
+      "name": "Add user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "dd3086dd-b562-4549-908f-115946984931",
+            "exec": [
+              "const response = pm.response.json();",
+              "",
+              "pm.globals.set(\"userId\", response.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -133,20 +144,20 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"Guest\",\n    \"permissions\": [\n        \"READ\"\n    ]\n}"
+          "raw": "{\n    \"login\": \"John\",\n    \"password\": \"001\",\n    \"age\": 25\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/groups",
+          "raw": "http://localhost:3000/users",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["groups"]
+          "path": ["users"]
         }
       },
       "response": []
     },
     {
-      "name": "Update group",
+      "name": "Update user",
       "request": {
         "method": "PUT",
         "header": [
@@ -164,20 +175,86 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"name\": \"Updated USER\",\n    \"permissions\": [\"READ\", \"SHARE\"]\n}"
+          "raw": "{\n    \"login\": \"This user has updated login\",\n    \"password\": \"123\",\n    \"age\": 20\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/groups/{{groupId}}",
+          "raw": "http://localhost:3000/users/{{userId}}",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["groups", "{{groupId}}"]
+          "path": ["users", "{{userId}}"]
         }
       },
       "response": []
     },
     {
-      "name": "Delete group",
+      "name": "Add photo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "dd3086dd-b562-4549-908f-115946984931",
+            "exec": ["", ""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data; boundary=???"
+          },
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "photo",
+              "type": "file",
+              "src": "src/postman-collections/Kenny.png"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}/photo",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}", "photo"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get photo",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/users/{{userId}}/photo",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["users", "{{userId}}", "photo"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete user",
       "request": {
         "method": "DELETE",
         "header": [
@@ -193,16 +270,12 @@
             "type": "text"
           }
         ],
-        "body": {
-          "mode": "raw",
-          "raw": ""
-        },
         "url": {
-          "raw": "http://localhost:3000/groups/{{groupId}}",
+          "raw": "http://localhost:3000/users/{{userId}}",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3000",
-          "path": ["groups", "{{groupId}}"]
+          "path": ["users", "{{userId}}"]
         }
       },
       "response": []

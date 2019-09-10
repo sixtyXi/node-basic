@@ -14,7 +14,7 @@
     "test": "jest --watch",
     "coverage": "jest --coverage",
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
-    "newman": "newman run src/postman-collections/Users.postman_collection.json && newman run src/postman-collections/Groups.postman_collection.json"
+    "newman": "newman run postman-collections/Users.postman_collection.json && newman run postman-collections/Groups.postman_collection.json"
   },
   "repository": {
     "type": "git",
