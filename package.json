@@ -52,7 +52,7 @@
   "dependencies": {
     "@types/formidable": "^1.0.31",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.9.1",
+    "class-validator": "^0.14.0",
     "csvtojson": "^2.0.8",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
